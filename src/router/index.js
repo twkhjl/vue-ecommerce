@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Ttt from '../views/Ttt.vue'
 import HomePage from '../views/controlPanel/HomePage.vue'
+import Login from '../views/controlPanel/Login.vue'
+
 
 const routes = [
   {
@@ -21,6 +23,11 @@ const routes = [
     path: '/cp/',
     name: 'HomePage',
     component: HomePage
+  },
+  {
+    path: '/cp/login',
+    name: 'Login',
+    component: Login
   },
   {
     path: '/ttt',
