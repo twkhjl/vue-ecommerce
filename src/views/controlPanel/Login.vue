@@ -1,6 +1,5 @@
 <template>
   <div class="hold-transition login-page">
-
     <div class="login-box">
       <div class="login-logo">
         <a href="#"><b>Admin</b>LTE</a>
@@ -12,7 +11,12 @@
 
           <form action="#" method="post">
             <div class="input-group mb-3">
-              <input type="email" class="form-control" placeholder="Email" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="username"
+                v-model="username"
+              />
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
@@ -24,6 +28,7 @@
                 type="password"
                 class="form-control"
                 placeholder="Password"
+                v-model="password"
               />
               <div class="input-group-append">
                 <div class="input-group-text">
@@ -40,7 +45,11 @@
               </div>
               <!-- /.col -->
               <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block" @click.prevent="login">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-block"
+                  @click.prevent="login"
+                >
                   Sign In
                 </button>
               </div>
@@ -71,17 +80,39 @@
         <!-- /.login-card-body -->
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
 export default {
-  methods:{
-    login(){
-      console.log('log in');
-    }
-  }
+  data() {
+    return {
+      username: "",
+      password: "",
+    };
+  },
+  methods: {
+    login() {
+      let bodyData = { username: this.username, password: this.password };
+
+      fetch("http://twkhjl.duckdns.org:3001/login", {
+        headers: {
+          "content-type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(bodyData),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.error) return;
+          if (res.token) {
+            localStorage.setItem("token_cp", res.token);
+            this.$router.push({ name: "HomePage" });
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+  },
 };
 </script>
 

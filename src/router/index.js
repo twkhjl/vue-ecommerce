@@ -4,6 +4,8 @@ import Ttt from '../views/Ttt.vue'
 import HomePage from '../views/controlPanel/HomePage.vue'
 import Login from '../views/controlPanel/Login.vue'
 
+// middlewares
+import authCP from "../middlewares/authCP"
 
 const routes = [
   {
@@ -22,17 +24,42 @@ const routes = [
   {
     path: '/cp/',
     name: 'HomePage',
-    component: HomePage
+    component: HomePage,
+    beforeEnter: (to, from, next) => {
+
+      authCP().then(res=>{
+        if(!res.result){ 
+          next({name:'Login'});
+        }else{
+          next();
+        }
+      });
+
+    }
   },
   {
     path: '/cp/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+
+      authCP().then(res=>{
+        if(res.result){ 
+          next({name:'HomePage'});
+        }else{
+          next();
+        }
+      });
+
+    }
   },
   {
     path: '/ttt',
     name: 'Ttt',
-    component: Ttt
+    component: Ttt,
+    beforeEnter: (to, from, next) => {
+      next();
+    }
   },
 ]
 

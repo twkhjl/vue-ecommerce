@@ -48,6 +48,18 @@
         </div>
       </li>
 
+            <!-- Messages Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-user"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a href="#" class="dropdown-item">個人資料</a>
+          <div class="dropdown-divider"></div>
+          <a href="javascript:void(0)" class="dropdown-item" @click="logout">登出</a>
+        </div>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -60,6 +72,14 @@
 <script>
 export default {
   name: "Navbar",
+  methods:{
+    logout(){
+      localStorage.removeItem("token_cp");
+      this.$router.push({name:'Login'});
+      return;
+    }
+
+  }
 };
 </script>
 
