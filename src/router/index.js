@@ -8,6 +8,10 @@ import ProductsPage from '../components/cp/pages/ProductsPage.vue'
 import CustomersPage from '../components/cp/pages/CustomersPage.vue'
 import CatsPage from '../components/cp/pages/CatsPage.vue'
 
+import FrontMain from '../views/front/Main.vue'
+import FrontLogin from '../views/front/Login.vue'
+import FrontSignUp from '../views/front/Signup.vue'
+
 
 
 // middlewares
@@ -15,17 +19,20 @@ import authCP from "../middlewares/authCP"
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/front/',
+    name: 'FrontMain',
+    component: FrontMain,
+    children:[]
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/front/login',
+    name: 'FrontLogin',
+    component: FrontLogin,
+  },
+  {
+    path: '/front/signup',
+    name: 'FrontSignUp',
+    component: FrontSignUp,
   },
   {
     path: '/cp/',
