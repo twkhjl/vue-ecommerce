@@ -2,14 +2,17 @@
   <div class="hold-transition login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="#"><b>Admin</b>LTE</a>
+        <a href="#">後台登入</a>
       </div>
       <!-- /.login-logo -->
       <div class="card">
         <div class="card-body login-card-body">
-          <p class="login-box-msg">Sign in to start your session</p>
+          <p class="login-box-msg">請輸入使用者帳號密碼</p>
 
           <form action="#" method="post">
+            <span class="text-danger" v-if="usernameError"
+              >*{{ usernameError }}</span
+            >
             <div class="input-group mb-3">
               <input
                 type="text"
@@ -19,10 +22,13 @@
               />
               <div class="input-group-append">
                 <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
+                  <span class="fas fa-user"></span>
                 </div>
               </div>
             </div>
+            <span class="text-danger" v-if="passwordError"
+              >*{{ passwordError }}</span
+            >
             <div class="input-group mb-3">
               <input
                 type="password"
@@ -40,7 +46,7 @@
               <div class="col-8">
                 <div class="icheck-primary">
                   <input type="checkbox" id="remember" />
-                  <label for="remember"> Remember Me </label>
+                  <label for="remember"> 記住我 </label>
                 </div>
               </div>
               <!-- /.col -->
@@ -50,32 +56,12 @@
                   class="btn btn-primary btn-block"
                   @click.prevent="login"
                 >
-                  Sign In
+                  用戶登入
                 </button>
               </div>
               <!-- /.col -->
             </div>
           </form>
-
-          <div class="social-auth-links text-center mb-3">
-            <p>- OR -</p>
-            <a href="#" class="btn btn-block btn-primary">
-              <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-            </a>
-            <a href="#" class="btn btn-block btn-danger">
-              <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-            </a>
-          </div>
-          <!-- /.social-auth-links -->
-
-          <p class="mb-1">
-            <a href="forgot-password.html">I forgot my password</a>
-          </p>
-          <p class="mb-0">
-            <a href="register.html" class="text-center"
-              >Register a new membership</a
-            >
-          </p>
         </div>
         <!-- /.login-card-body -->
       </div>
@@ -89,13 +75,15 @@ export default {
     return {
       username: "",
       password: "",
+      usernameError: "",
+      passwordError: "",
     };
   },
   methods: {
     login() {
       let bodyData = { username: this.username, password: this.password };
 
-      fetch("http://twkhjl.duckdns.org:3001/login", {
+      fetch("http://twkhjl.duckdns.org:3001/login/cp", {
         headers: {
           "content-type": "application/json",
         },
@@ -104,10 +92,22 @@ export default {
       })
         .then((res) => res.json())
         .then((res) => {
-          if (res.error) return;
+          if (res.error) {
+            let err = res.error;
+            if (err == "user name not exist") {
+              this.passwordError = "";
+              this.usernameError = "無效的使用者名稱";
+            }
+            if (err == "password incorrect") {
+              this.usernameError = "";
+              this.passwordError = "密碼錯誤";
+            }
+            return;
+          }
           if (res.token) {
             localStorage.setItem("token_cp", res.token);
             this.$router.push({ name: "HomePage" });
+            return;
           }
         })
         .catch((err) => console.log(err));

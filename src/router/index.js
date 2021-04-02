@@ -1,8 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Ttt from '../views/Ttt.vue'
-import HomePage from '../views/controlPanel/HomePage.vue'
-import Login from '../views/controlPanel/Login.vue'
+import CpMain from '../views/cp/Main.vue'
+import Login from '../views/cp/Login.vue'
+import HomePage from '../components/cp/pages/HomePage.vue'
+import ProductsPage from '../components/cp/pages/ProductsPage.vue'
+import CustomersPage from '../components/cp/pages/CustomersPage.vue'
+import CatsPage from '../components/cp/pages/CatsPage.vue'
+
+
 
 // middlewares
 import authCP from "../middlewares/authCP"
@@ -23,19 +29,47 @@ const routes = [
   },
   {
     path: '/cp/',
-    name: 'HomePage',
-    component: HomePage,
-    beforeEnter: (to, from, next) => {
+    name: 'CpMain',
+    component: CpMain,
+    children:[
+      {
+        path:'',
+        name:'HomePage',
+        component:HomePage
 
-      authCP().then(res=>{
-        if(!res.result){ 
-          next({name:'Login'});
-        }else{
-          next();
-        }
-      });
+      },
+      {
+        path:'products',
+        name:'ProductsPage',
+        component:ProductsPage
 
-    }
+      },
+      {
+        path:'customers',
+        name:'CustomersPage',
+        component:CustomersPage
+
+      },
+      {
+        path:'cats',
+        name:'CatsPage',
+        component:CatsPage
+
+      }
+    ],
+
+    // beforeEnter: (to, from, next) => {
+
+    //   authCP().then(res => {
+    //     if (!res.result) {
+    //       next({ name: 'Login' });
+    //     } else {
+    //       next();
+    //     }
+    //   });
+
+    // }
+
   },
   {
     path: '/cp/login',
@@ -43,10 +77,10 @@ const routes = [
     component: Login,
     beforeEnter: (to, from, next) => {
 
-      authCP().then(res=>{
-        if(res.result){ 
-          next({name:'HomePage'});
-        }else{
+      authCP().then(res => {
+        if (res.result) {
+          next({ name: 'HomePage' });
+        } else {
           next();
         }
       });

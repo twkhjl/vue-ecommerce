@@ -8,7 +8,7 @@
 /* eslint-disable camelcase */
 
 (function ($) {
-  'use strict'
+  // 'use strict'
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
@@ -555,11 +555,11 @@
   }, true))
 
   var active_accent_color = null
-  $('body')[0].classList.forEach(function (className) {
-    if (accent_colors.indexOf(className) > -1 && active_accent_color === null) {
-      active_accent_color = className.replace('navbar-', 'bg-')
-    }
-  })
+  // $('body')[0].classList.forEach(function (className) {
+  //   if (accent_colors.indexOf(className) > -1 && active_accent_color === null) {
+  //     active_accent_color = className.replace('navbar-', 'bg-')
+  //   }
+  // })
 
   // $accent_variants.find('option.' + active_accent_color).prop('selected', true)
   // $accent_variants.removeClass().addClass('custom-select mb-3 text-light border-0 ').addClass(active_accent_color)

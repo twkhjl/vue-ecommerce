@@ -2,16 +2,17 @@
 
 const authCP = async function () {
   let result="";
+  
   let token_cp = localStorage.getItem("token_cp");
-  if (!token_cp) {
-    result= { "err": "no token" };
-    return result;
+  if(!token_cp){
+    return {"error":"no token"};
   }
 
   let bodyData = {
-    token: token_cp
+    token: token_cp,
+    type:"cp"
   };
-  result = await fetch("http://twkhjl.duckdns.org:3001/jwt", {
+  result = await fetch("http://twkhjl.duckdns.org:3001/jwt/cp", {
     headers: {
       "content-type": "application/json"
     },
