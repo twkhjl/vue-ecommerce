@@ -32,7 +32,21 @@
 </template>
 
 <script>
+  import store from '../../store';
 export default {
+  beforeCreate(){
+    let result = this.$store.dispatch('verifyUserToken',{
+      token_name:'token_front',
+      url: store.state.api.apiVerifyFrontUserTokenURL,
+    });
+
+    result.then(json=>{
+      if(json.pass){
+        this.$router.push({name: 'FrontMain'});
+        return;
+      }
+    });
+  },
   data(){
     return {
       email:'',
@@ -68,7 +82,8 @@ export default {
           }
           if (res.token) {
             localStorage.setItem("token_front", res.token);
-            this.$router.push({ name: "FrontMain" });
+            this.$store.commit('loginFrontUser',res);
+            // this.$router.push({ name: "FrontMain" });
             return;
           }
         })
