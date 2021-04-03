@@ -106,7 +106,7 @@ export default {
           }
           if (res.token) {
             localStorage.setItem("token_cp", res.token);
-            this.$router.push({ name: "HomePage" });
+            this.$router.push('/cp/');
             return;
           }
         })

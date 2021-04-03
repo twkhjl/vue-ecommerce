@@ -18,11 +18,12 @@ import FrontSignUp from '../views/front/Signup.vue'
 import authCP from "../middlewares/authCP"
 
 const routes = [
+
   {
-    path: '/front/',
+    path: "/",
     name: 'FrontMain',
     component: FrontMain,
-    children:[]
+    children: []
   },
   {
     path: '/front/login',
@@ -38,73 +39,44 @@ const routes = [
     path: '/cp/',
     name: 'CpMain',
     component: CpMain,
-    children:[
+    children: [
       {
-        path:'',
-        name:'HomePage',
-        component:HomePage
+        path: '',
+        name: 'HomePage',
+        component: HomePage
 
       },
       {
-        path:'products',
-        name:'ProductsPage',
-        component:ProductsPage
+        path: 'products',
+        name: 'ProductsPage',
+        component: ProductsPage
 
       },
       {
-        path:'customers',
-        name:'CustomersPage',
-        component:CustomersPage
+        path: 'customers',
+        name: 'CustomersPage',
+        component: CustomersPage
 
       },
       {
-        path:'cats',
-        name:'CatsPage',
-        component:CatsPage
+        path: 'cats',
+        name: 'CatsPage',
+        component: CatsPage
 
       }
     ],
-
-    // beforeEnter: (to, from, next) => {
-
-    //   authCP().then(res => {
-    //     if (!res.result) {
-    //       next({ name: 'Login' });
-    //     } else {
-    //       next();
-    //     }
-    //   });
-
-    // }
 
   },
   {
     path: '/cp/login',
     name: 'Login',
     component: Login,
-    beforeEnter: (to, from, next) => {
+  }
 
-      authCP().then(res => {
-        if (res.result) {
-          next({ name: 'HomePage' });
-        } else {
-          next();
-        }
-      });
-
-    }
-  },
-  {
-    path: '/ttt',
-    name: 'Ttt',
-    component: Ttt,
-    beforeEnter: (to, from, next) => {
-      next();
-    }
-  },
 ]
 
 const router = createRouter({
+  base: '/',
   // history: createWebHistory(process.env.BASE_URL),
   history: createWebHistory(),
   routes

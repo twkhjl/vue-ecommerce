@@ -64,7 +64,7 @@
                   <a class="pull-left" href="#">
                     <img
                       class="media-object"
-                      src="/front/images/shop/cart/cart-1.jpg"
+                      src="/assets_front/images/shop/cart/cart-1.jpg"
                       alt="image"
                     />
                   </a>
@@ -84,7 +84,7 @@
                   <a class="pull-left" href="#">
                     <img
                       class="media-object"
-                      src="/front/images/shop/cart/cart-2.jpg"
+                      src="/assets_front/images/shop/cart/cart-2.jpg"
                       alt="image"
                     />
                   </a>
@@ -292,7 +292,7 @@
                     <a href="shop.html">
                       <img
                         class="img-responsive"
-                        src="/front/images/shop/header-img.jpg"
+                        src="/assets_front/images/shop/header-img.jpg"
                         alt="menu image"
                       />
                     </a>
@@ -372,7 +372,7 @@
           <!-- SLIDE  -->
           <li
             data-index="rs-73"
-            data-thumb="/front/images/slider/slider-1.jpg"
+            data-thumb="/assets_front/images/slider/slider-1.jpg"
             data-transition="fade"
             data-slotamount="default"
             data-hideafterloop="0"
@@ -397,7 +397,7 @@
           >
             <!-- MAIN IMAGE -->
             <img
-              src="/front/images/slider/slider-1.jpg"
+              src="/assets_front/images/slider/slider-1.jpg"
               data-bgposition="cover"
               data-bgfit="cover"
               data-bgrepeat="no-repeat"
@@ -523,14 +523,14 @@
             data-easein="default"
             data-easeout="default"
             data-masterspeed="300"
-            data-thumb="/front/images/slider/slider-3.jpg"
+            data-thumb="/assets_front/images/slider/slider-3.jpg"
             data-rotate="0"
             data-saveperformance="off"
             data-title="Slide"
           >
             <!-- MAIN IMAGE -->
             <img
-              src="/front/images/slider/slider-3.jpg"
+              src="/assets_front/images/slider/slider-3.jpg"
               alt=""
               data-bgposition="cover"
               data-bgfit="cover"
@@ -659,7 +659,7 @@
             data-easein="default"
             data-easeout="default"
             data-masterspeed="300"
-            data-thumb="/front/images/slider/slider-2.jpg"
+            data-thumb="/assets_front/images/slider/slider-2.jpg"
             data-rotate="0"
             data-saveperformance="off"
             data-title="Slide"
@@ -677,7 +677,7 @@
           >
             <!-- MAIN IMAGE -->
             <img
-              src="/front/images/slider/slider-2.jpg"
+              src="/assets_front/images/slider/slider-2.jpg"
               data-bgposition="center center"
               data-bgfit="cover"
               data-bgrepeat="no-repeat"
@@ -818,7 +818,7 @@
         <div class="col-md-6">
           <div class="category-box">
             <a href="">
-              <img src="/front/images/shop/category/category-1.jpg" alt="" />
+              <img src="/assets_front/images/shop/category/category-1.jpg" alt="" />
               <div class="content">
                 <h3>Clothes Sales</h3>
                 <p>Shop New Season Clothing</p>
@@ -827,7 +827,7 @@
           </div>
           <div class="category-box">
             <a href="">
-              <img src="/front/images/shop/category/category-2.jpg" alt="" />
+              <img src="/assets_front/images/shop/category/category-2.jpg" alt="" />
               <div class="content">
                 <h3>Smart Casuals</h3>
                 <p>Get Wide Range Selection</p>
@@ -838,7 +838,7 @@
         <div class="col-md-6">
           <div class="category-box category-box-2">
             <a href="">
-              <img src="/front/images/shop/category/category-3.jpg" alt="" />
+              <img src="/assets_front/images/shop/category/category-3.jpg" alt="" />
               <div class="content">
                 <h3>Jewellery</h3>
                 <p>Special Design Comes First</p>
@@ -864,7 +864,7 @@
               <span class="bage">Sale</span>
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-1.jpg"
+                src="/assets_front/images/shop/products/product-1.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -894,7 +894,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-2.jpg"
+                src="/assets_front/images/shop/products/product-2.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -924,7 +924,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-3.jpg"
+                src="/assets_front/images/shop/products/product-3.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -954,7 +954,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-4.jpg"
+                src="/assets_front/images/shop/products/product-4.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -984,7 +984,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-5.jpg"
+                src="/assets_front/images/shop/products/product-5.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -1014,7 +1014,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-6.jpg"
+                src="/assets_front/images/shop/products/product-6.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -1045,7 +1045,7 @@
               <span class="bage">Sale</span>
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-7.jpg"
+                src="/assets_front/images/shop/products/product-7.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -1075,7 +1075,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-8.jpg"
+                src="/assets_front/images/shop/products/product-8.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -1105,7 +1105,7 @@
             <div class="product-thumb">
               <img
                 class="img-responsive"
-                src="/front/images/shop/products/product-9.jpg"
+                src="/assets_front/images/shop/products/product-9.jpg"
                 alt="product-img"
               />
               <div class="preview-meta">
@@ -1149,7 +1149,7 @@
                     <div class="modal-image">
                       <img
                         class="img-responsive"
-                        src="/front/images/shop/products/modal-product.jpg"
+                        src="/assets_front/images/shop/products/modal-product.jpg"
                         alt="product-img"
                       />
                     </div>

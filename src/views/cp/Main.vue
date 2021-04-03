@@ -87,7 +87,7 @@
               <!-- Message Start -->
               <div class="media">
                 <img
-                  src="/cp/dist/img/user1-128x128.jpg"
+                  src="/assets_cp/dist/img/user1-128x128.jpg"
                   alt="User Avatar"
                   class="img-size-50 mr-3 img-circle"
                 />
@@ -111,7 +111,7 @@
               <!-- Message Start -->
               <div class="media">
                 <img
-                  src="/cp/dist/img/user8-128x128.jpg"
+                  src="/assets_cp/dist/img/user8-128x128.jpg"
                   alt="User Avatar"
                   class="img-size-50 img-circle mr-3"
                 />
@@ -135,7 +135,7 @@
               <!-- Message Start -->
               <div class="media">
                 <img
-                  src="/cp/dist/img/user3-128x128.jpg"
+                  src="/assets_cp/dist/img/user3-128x128.jpg"
                   alt="User Avatar"
                   class="img-size-50 img-circle mr-3"
                 />
@@ -216,7 +216,7 @@
       <!-- Brand Logo -->
       <a href="#" class="brand-link">
         <img
-          src="/cp/dist/img/AdminLTELogo.png"
+          src="/assets_cp/dist/img/AdminLTELogo.png"
           alt="AdminLTE Logo"
           class="brand-image img-circle elevation-3"
           style="opacity: 0.8"
@@ -452,12 +452,13 @@
 <script>
 import authCP from "../../middlewares/authCP";
 export default {
-  Created() {
+  beforeCreate() {
     authCP().then((res) => {
-      if (!res.result) {
-        this.$router.push({ name: "Login" });
+      if (res['error']) {
+        this.$router.push('/cp/login');
         return;
       }
+      this.reload;
     });
   },
 
@@ -467,7 +468,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token_cp");
-      this.$router.push({ name: "Login" });
+      this.$router.push('/cp/login');
     },
   },
 };
