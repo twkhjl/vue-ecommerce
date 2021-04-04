@@ -65,7 +65,7 @@
                                  <label for="card-cvc">Card Code <span class="required">*</span></label>
                                  <input id="card-cvc" class="form-control"  type="tel" maxlength="4" placeholder="CVC" >
                               </div>
-                              <a href="confirmation.html" class="btn btn-main mt-20">Place Order</a >
+                              <a href="#" class="btn btn-main mt-20" @click.prevent="placeOrder()">Place Order</a >
                            </form>
                         </div>
                      </div>
@@ -131,7 +131,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods:{
+    placeOrder(){
+      this.$router.push({name:'ConfirmationPage'});
+      return;
+    }
+  }
+};
 </script>
 
 <style>

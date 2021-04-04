@@ -8,7 +8,7 @@
         	<i class="tf-ion-android-checkmark-circle"></i>
           <h2 class="text-center">Thank you! For your payment</h2>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, sed.</p>
-          <a href="shop.html" class="btn btn-main mt-20">Continue Shopping</a>
+          <a href="#" class="btn btn-main mt-20" @click.prevent="backToShop()">Continue Shopping</a>
         </div>
       </div>
     </div>
@@ -17,7 +17,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods:{
+    backToShop(){
+      this.$router.push({name:'ShopPage'});return;
+    }
+  }
+};
 </script>
 
 <style>

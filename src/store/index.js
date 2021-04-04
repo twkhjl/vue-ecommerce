@@ -8,6 +8,7 @@ export default createStore({
       apiVerifyFrontUserTokenURL: `${apiRootURL}/jwt/front`,
       apiLoginFrontUserURL: `${apiRootURL}/login/front`,
       apiVerifyCpUserTokenURL: `${apiRootURL}/jwt/cp`,
+      apiCatDataURL: `${apiRootURL}/cats`,
 
     },
 
@@ -36,7 +37,7 @@ export default createStore({
       delete frontUser.token;
       delete frontUser.expiresIn;
       localStorage.setItem("user_front", JSON.stringify(frontUser));
-      router.push({ name: "FrontMain" });
+      router.push({ name: "ShopPage" });
     },
     logoutFrontUser(state, payload) {
       localStorage.removeItem("token_front");
@@ -50,7 +51,7 @@ export default createStore({
         isLoggedIn: false
       };
 
-      router.push({ name: "FrontLogin" });
+      // router.push({ name: "FrontLogin" });
     }
   },
   actions: {
@@ -75,6 +76,36 @@ export default createStore({
       });
       return result;
     },
+    async getData(context, payload) {
+      
+      let result='';
+      await fetch(payload.url, {
+        method: 'GET',
+        headers: { 'content-type': 'application/json' },
+      }).then(res => res.json()).then(json => {
+        result = Promise.resolve(json);
+      }).catch(err=>{
+        result = Promise.resolve(err);
+      });
+      return result;
+
+    },
+    async postData(context, payload) {
+      
+      let result='';
+      await fetch(payload.url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload.body)
+      }).then(res => res.json()).then(json => {
+        result = Promise.resolve(json);
+      }).catch(err=>{
+        result = Promise.resolve(err);
+      });
+      return result;
+
+    },
+
 
   },
   modules: {

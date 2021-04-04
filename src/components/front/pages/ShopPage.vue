@@ -20,118 +20,61 @@
       <div class="row">
         <div class="col-md-3">
           <div class="widget">
-            <h4 class="widget-title">Short By</h4>
+            <h4 class="widget-title">主分類</h4>
             <form method="post" action="#">
-              <select class="form-control">
-                <option>Man</option>
-                <option>Women</option>
-                <option>Accessories</option>
-                <option>Shoes</option>
+              <select class="form-control" v-model="selectedOption">
+                <template v-for="option in options" :key="option.value">
+                  <option :value="option.value">{{ option.name }}</option>
+                </template>
               </select>
             </form>
           </div>
           <div class="widget product-category">
-            <h4 class="widget-title">Categories</h4>
+            <h4 class="widget-title">商品分類</h4>
             <div
               class="panel-group commonAccordion"
               id="accordion"
               role="tablist"
               aria-multiselectable="true"
             >
-              <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingOne">
-                  <h4 class="panel-title">
-                    <a
-                      role="button"
-                      data-toggle="collapse"
-                      data-parent="#accordion"
-                      href="#collapseOne"
-                      aria-expanded="true"
-                      aria-controls="collapseOne"
-                    >
-                      Shoes
-                    </a>
-                  </h4>
-                </div>
-                <div
-                  id="collapseOne"
-                  class="panel-collapse collapse in"
-                  role="tabpanel"
-                  aria-labelledby="headingOne"
-                >
-                  <div class="panel-body">
-                    <ul>
-                      <li><a href="">Brand & Twist</a></li>
-                      <li><a href="">Shoe Color</a></li>
-                      <li><a href="">Shoe Color</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingTwo">
+            <template v-for="cat in cats[selectedOption]" :key="cat.id">
+              
+              <div class="panel panel-default" v-if="cat.id">
+                <div class="panel-heading" role="tab" :id="'heading'+cat.id">
                   <h4 class="panel-title">
                     <a
                       class="collapsed"
                       role="button"
                       data-toggle="collapse"
                       data-parent="#accordion"
-                      href="#collapseTwo"
+                      :href="'#collapse'+cat.id"
                       aria-expanded="false"
-                      aria-controls="collapseTwo"
+                      :aria-controls="'collapse'+cat.id"
                     >
-                      Duty Wear
+                      {{cat.name}}
                     </a>
                   </h4>
                 </div>
                 <div
-                  id="collapseTwo"
+                  :id="'collapse'+cat.id"
                   class="panel-collapse collapse"
                   role="tabpanel"
-                  aria-labelledby="headingTwo"
+                  :aria-labelledby="'heading'+cat.id"
                 >
                   <div class="panel-body">
                     <ul>
-                      <li><a href="">Brand & Twist</a></li>
-                      <li><a href="">Shoe Color</a></li>
-                      <li><a href="">Shoe Color</a></li>
+                      <template v-for="(v,i) in cat.subcat1" :key="i">
+                        <li><a href="">{{v.name}}</a></li>
+                      </template>
                     </ul>
                   </div>
                 </div>
               </div>
-              <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingThree">
-                  <h4 class="panel-title">
-                    <a
-                      class="collapsed"
-                      role="button"
-                      data-toggle="collapse"
-                      data-parent="#accordion"
-                      href="#collapseThree"
-                      aria-expanded="false"
-                      aria-controls="collapseThree"
-                    >
-                      WorkOut Shoes
-                    </a>
-                  </h4>
-                </div>
-                <div
-                  id="collapseThree"
-                  class="panel-collapse collapse"
-                  role="tabpanel"
-                  aria-labelledby="headingThree"
-                >
-                  <div class="panel-body">
-                    <ul>
-                      <li><a href="">Brand & Twist</a></li>
-                      <li><a href="">Shoe Color</a></li>
-                      <li><a href="">Gladian Shoes</a></li>
-                      <li><a href="">Swis Shoes</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+
+            </template>
             </div>
+
+
           </div>
         </div>
         <div class="col-md-9">
@@ -465,7 +408,35 @@
 </template>
 
 <script>
-export default {};
+import store from "../../../store";
+export default {
+  async created() {
+    await this.$store
+      .dispatch("getData", { url: store.state.api.apiCatDataURL })
+      .then((json) => {
+        this.cats = json;
+      });
+
+    let tmpArr = Object.keys(this.cats);
+    tmpArr.forEach((v) => {
+      if (v == -1) {
+        this.options.unshift({ name: this.cats[v].name, value: v });
+      } else {
+        this.options.push({ name: this.cats[v].name, value: v });
+      }
+    });
+  },
+  data() {
+    return {
+      cats: "",
+      options: [],
+      selectedOption:-1
+    };
+  },
+  methods:{
+    
+  }
+};
 </script>
 
 <style>

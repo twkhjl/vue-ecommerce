@@ -15,10 +15,16 @@ import FrontLogin from '../views/front/Login.vue'
 import FrontSignUp from '../views/front/Signup.vue'
 
 import FrontHomePage from '../components/front/pages/HomePage.vue'
-import DashboardPage from '../components/front/pages/DashboardPage.vue'
-import ShopPage from '../components/front/pages/ShopPage.vue'
+import AboutPage from '../components/front/pages/AboutPage.vue'
+import ContactPage from '../components/front/pages/ContactPage.vue'
+
+
+import DashboardMain from '../views/front/DashboardMain.vue'
+import DashboardHomePage from '../components/front/pages/DashboardHomePage.vue'
 import OrderPage from '../components/front/pages/OrderPage.vue'
 import ProfileDetailPage from '../components/front/pages/ProfileDetailPage.vue'
+
+import ShopPage from '../components/front/pages/ShopPage.vue'
 import CartPage from '../components/front/pages/CartPage.vue'
 import CheckoutPage from '../components/front/pages/CheckoutPage.vue'
 import ConfirmationPage from '../components/front/pages/ConfirmationPage.vue'
@@ -32,7 +38,7 @@ const routes = [
     component: Home,
   },
   {
-    path: "/ttt",
+    path: "/cp/ttt",
     name: 'Ttt',
     component: Ttt,
     children: []
@@ -50,23 +56,45 @@ const routes = [
 
       },
       {
+        path: 'about',
+        name: 'AboutPage',
+        component: AboutPage
+
+      },
+      {
+        path: 'contact',
+        name: 'ContactPage',
+        component: ContactPage
+
+      },
+
+      {
         path: 'dashboard',
-        name: 'DashboardPage',
-        component: DashboardPage
+        name: 'DashboardMain',
+        component: DashboardMain,
+        children:[
+          {
+            path: '',
+            name: 'DashboardHomePage',
+            component: DashboardHomePage
+    
+          },
+          {
+            path: 'order',
+            name: 'OrderPage',
+            component: OrderPage
+    
+          },
+          {
+            path: 'profileDetail',
+            name: 'ProfileDetailPage',
+            component: ProfileDetailPage
+    
+          }
+        ]
 
       },
-      {
-        path: 'order',
-        name: 'OrderPage',
-        component: OrderPage
-
-      },
-      {
-        path: 'profileDetail',
-        name: 'ProfileDetailPage',
-        component: ProfileDetailPage
-
-      },
+      
       {
         path: 'shop',
         name: 'ShopPage',
@@ -85,12 +113,7 @@ const routes = [
         component: CheckoutPage
 
       },
-      {
-        path: 'confirmation',
-        name: 'ConfirmationPage',
-        component: ConfirmationPage
-
-      },
+     
     ]
   },
   {
@@ -102,6 +125,12 @@ const routes = [
     path: '/front/signup',
     name: 'FrontSignUp',
     component: FrontSignUp,
+  },
+  {
+    path: '/front/confirmation',
+    name: 'ConfirmationPage',
+    component: ConfirmationPage
+
   },
   {
     path: '/cp/',

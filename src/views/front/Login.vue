@@ -83,6 +83,9 @@ export default {
           if (res.token) {
             localStorage.setItem("token_front", res.token);
             this.$store.commit('loginFrontUser',res);
+            
+            router.push({ name: "FrontHomePage" });
+            // location.reload();
             // this.$router.push({ name: "FrontMain" });
             return;
           }
