@@ -25,6 +25,7 @@ import OrderPage from '../components/front/pages/OrderPage.vue'
 import ProfileDetailPage from '../components/front/pages/ProfileDetailPage.vue'
 
 import ShopPage from '../components/front/pages/ShopPage.vue'
+import ProductDetailPage from '../components/front/pages/ProductDetailPage.vue'
 import CartPage from '../components/front/pages/CartPage.vue'
 import CheckoutPage from '../components/front/pages/CheckoutPage.vue'
 import ConfirmationPage from '../components/front/pages/ConfirmationPage.vue'
@@ -99,6 +100,12 @@ const routes = [
         path: 'shop',
         name: 'ShopPage',
         component: ShopPage
+
+      },
+      {
+        path: 'product/:id',
+        name: 'ProductDetailPage',
+        component: ProductDetailPage
 
       },
       {

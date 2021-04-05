@@ -81,278 +81,47 @@
         </div>
         <div class="col-md-9">
           <div class="row">
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <span class="bage">Sale</span>
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-1.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
+            <template v-for="product in products" :key="product.id">
+              <div class="col-md-4">
+                <div class="product-item">
+                  <div class="product-thumb">
+                    <!-- <span class="bage">Sale</span> -->
+                    <img
+                      class="img-responsive"
+                      :src="product.imgs[0]"
+                      alt="product-img"
+                    />
+                    <div class="preview-meta">
+                      <ul>
+                        <li>
+                          <span
+                            data-toggle="modal"
+                            data-target="#product-modal"
+                          >
+                            <i class="tf-ion-ios-search-strong"></i>
+                          </span>
+                        </li>
+                        <li>
+                          <a href="#"><i class="tf-ion-ios-heart"></i></a>
+                        </li>
+                        <li>
+                          <a href=""><i class="tf-ion-android-cart"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="product-content">
+                    <h4>
+                      <router-link
+                        :to="{ name: 'ProductDetailPage', params: { id: product.id } }"
+                        >{{ product.name }}
+                        </router-link>
+                    </h4>
+                    <p class="price">${{ product.price }}</p>
                   </div>
                 </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Reef Boardsport</a></h4>
-                  <p class="price">$200</p>
-                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-2.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-3.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Strayhorn SP</a></h4>
-                  <p class="price">$230</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-4.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Bradley Mid</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-5.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-6.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <span class="bage">Sale</span>
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-7.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-8.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="product-item">
-                <div class="product-thumb">
-                  <img
-                    class="img-responsive"
-                    src="images/shop/products/product-9.jpg"
-                    alt="product-img"
-                  />
-                  <div class="preview-meta">
-                    <ul>
-                      <li>
-                        <span data-toggle="modal" data-target="#product-modal">
-                          <i class="tf-ion-ios-search-strong"></i>
-                        </span>
-                      </li>
-                      <li>
-                        <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href=""><i class="tf-ion-android-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="product-content">
-                  <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                  <p class="price">$200</p>
-                </div>
-              </div>
-            </div>
+            </template>
 
             <!-- Modal -->
             <div class="modal product-modal fade" id="product-modal">
@@ -417,26 +186,26 @@ export default {
       .dispatch("getData", { url: store.state.api.apiCatDataURL })
       .then((json) => {
         this.cats = json;
+        let tmpArr = Object.keys(this.cats);
+        tmpArr.forEach((v) => {
+          if (v == -1) {
+            this.options.unshift({ name: this.cats[v].name, value: v });
+          } else {
+            this.options.push({ name: this.cats[v].name, value: v });
+          }
+        });
       });
     await this.$store
       .dispatch("getData", { url: store.state.api.apiProductsURL })
       .then((json) => {
         this.products = json;
       });
-
-    let tmpArr = Object.keys(this.cats);
-    tmpArr.forEach((v) => {
-      if (v == -1) {
-        this.options.unshift({ name: this.cats[v].name, value: v });
-      } else {
-        this.options.push({ name: this.cats[v].name, value: v });
-      }
-    });
   },
   data() {
     return {
       cats: "",
       products: "",
+      filterProfucts: "",
       options: [],
       selectedOption: -1,
     };

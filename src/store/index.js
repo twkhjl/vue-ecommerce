@@ -4,13 +4,22 @@ import router from '../router'
 const apiRootURL = "http://twkhjl.duckdns.org:3001";
 export default createStore({
   state: {
+    commFn: {
+      isJSON(str) {
+        try {
+          return (JSON.parse(str) && !!str);
+        } catch (e) {
+          return false;
+        }
+      }
+    },
     scripts: {
       front: [
         // Main jQuery
         {
           src: "/assets_front/plugins/jquery/dist/jquery.min.js",
         },
-        
+
         // Bootstrap 3.1
         {
           src: "/assets_front/plugins/bootstrap/js/bootstrap.min.js",
@@ -37,59 +46,60 @@ export default createStore({
         },
 
         // Revolution Slider
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.tools.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js",
-        },
-        // Revolution Slider
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.tools.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.actions.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.carousel.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.kenburn.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.layeranimation.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.migration.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.navigation.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.parallax.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.slideanims.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js",
-        },
-        {
-          src: "/assets_front/plugins/revolution-slider/assets/warning.js",
-        },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.tools.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.tools.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.actions.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.carousel.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.kenburn.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.layeranimation.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.migration.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.navigation.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.parallax.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.slideanims.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js",
+        // },
+        // {
+        //   src: "/assets_front/plugins/revolution-slider/assets/warning.js",
+        // },
+
+
         // Google Mapl
-        {
-          src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw",
-        },
-        {
-          src: "/assets_front/plugins/google-map/gmap.js",
-        },
+        // {
+        //   src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw",
+        // },
+        // {
+        //   src: "/assets_front/plugins/google-map/gmap.js",
+        // },
 
         // Main Js File
         {
@@ -129,6 +139,7 @@ export default createStore({
       apiVerifyCpUserTokenURL: `${apiRootURL}/jwt/cp`,
       apiCatDataURL: `${apiRootURL}/cats`,
       apiProductsURL: `${apiRootURL}/products`,
+      apiGetSingleProductURL: `${apiRootURL}/product/`,
 
     },
 
@@ -210,13 +221,20 @@ export default createStore({
       return result;
     },
     async getData(context, payload) {
+      function isJSON(str) {
+        try {
+          return (JSON.parse(str) && !!str);
+        } catch (e) {
+          return false;
+        }
+      }
 
       let result = '';
       await fetch(payload.url, {
         method: 'GET',
         headers: { 'content-type': 'application/json' },
-      }).then(res => res.json()).then(json => {
-        result = Promise.resolve(json);
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
       }).catch(err => {
         result = Promise.resolve({ error: err });
       });
