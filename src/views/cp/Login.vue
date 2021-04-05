@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import store from "../../store";
 export default {
   data() {
     return {
@@ -80,37 +81,35 @@ export default {
     };
   },
   methods: {
-    login() {
-      let bodyData = { username: this.username, password: this.password };
+    async login() {
+      let result = await store.dispatch("postData", {
+        url: store.state.api.apiLoginCpUserURL,
+        body: { username: this.username, password: this.password },
+      });
+      if(!result){
+        this.usernameError = "系統錯誤,請聯繫管理員";
+        return;
+      }
 
-      fetch("http://twkhjl.duckdns.org:3001/login/cp", {
-        headers: {
-          "content-type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(bodyData),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.error) {
-            let err = res.error;
-            if (err == "user name not exist") {
-              this.passwordError = "";
-              this.usernameError = "無效的使用者名稱";
-            }
-            if (err == "password incorrect") {
-              this.usernameError = "";
-              this.passwordError = "密碼錯誤";
-            }
-            return;
-          }
-          if (res.token) {
-            localStorage.setItem("token_cp", res.token);
-            this.$router.push('/cp/');
-            return;
-          }
-        })
-        .catch((err) => console.log(err));
+      if (result.error) {
+        let err = result.error;
+        if (err == "user name not exist") {
+          this.passwordError = "";
+          this.usernameError = "無效的使用者名稱";
+        } else if (err == "password incorrect") {
+          this.usernameError = "";
+          this.passwordError = "密碼錯誤";
+        } else {
+          this.usernameError = res.error;
+        }
+        return;
+      }
+      if (result.token) {
+        localStorage.setItem("token_cp", result.token);
+        window.location.href = "/cp/";
+        // this.$router.push('/cp/');
+      }
+      
     },
   },
 };

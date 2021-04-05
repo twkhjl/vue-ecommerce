@@ -37,44 +37,46 @@
               role="tablist"
               aria-multiselectable="true"
             >
-            <template v-for="cat in cats[selectedOption]" :key="cat.id">
-              
-              <div class="panel panel-default" v-if="cat.id">
-                <div class="panel-heading" role="tab" :id="'heading'+cat.id">
-                  <h4 class="panel-title">
-                    <a
-                      class="collapsed"
-                      role="button"
-                      data-toggle="collapse"
-                      data-parent="#accordion"
-                      :href="'#collapse'+cat.id"
-                      aria-expanded="false"
-                      :aria-controls="'collapse'+cat.id"
-                    >
-                      {{cat.name}}
-                    </a>
-                  </h4>
-                </div>
-                <div
-                  :id="'collapse'+cat.id"
-                  class="panel-collapse collapse"
-                  role="tabpanel"
-                  :aria-labelledby="'heading'+cat.id"
-                >
-                  <div class="panel-body">
-                    <ul>
-                      <template v-for="(v,i) in cat.subcat1" :key="i">
-                        <li><a href="">{{v.name}}</a></li>
-                      </template>
-                    </ul>
+              <template v-for="cat in cats[selectedOption]" :key="cat.id">
+                <div class="panel panel-default" v-if="cat.id">
+                  <div
+                    class="panel-heading"
+                    role="tab"
+                    :id="'heading' + cat.id"
+                  >
+                    <h4 class="panel-title">
+                      <a
+                        class="collapsed"
+                        role="button"
+                        data-toggle="collapse"
+                        data-parent="#accordion"
+                        :href="'#collapse' + cat.id"
+                        aria-expanded="false"
+                        :aria-controls="'collapse' + cat.id"
+                      >
+                        {{ cat.name }}
+                      </a>
+                    </h4>
+                  </div>
+                  <div
+                    :id="'collapse' + cat.id"
+                    class="panel-collapse collapse"
+                    role="tabpanel"
+                    :aria-labelledby="'heading' + cat.id"
+                  >
+                    <div class="panel-body">
+                      <ul>
+                        <template v-for="(v, i) in cat.subcat1" :key="i">
+                          <li>
+                            <a href="">{{ v.name }}</a>
+                          </li>
+                        </template>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-            </template>
+              </template>
             </div>
-
-
           </div>
         </div>
         <div class="col-md-9">
@@ -416,6 +418,11 @@ export default {
       .then((json) => {
         this.cats = json;
       });
+    await this.$store
+      .dispatch("getData", { url: store.state.api.apiProductsURL })
+      .then((json) => {
+        this.products = json;
+      });
 
     let tmpArr = Object.keys(this.cats);
     tmpArr.forEach((v) => {
@@ -429,13 +436,12 @@ export default {
   data() {
     return {
       cats: "",
+      products: "",
       options: [],
-      selectedOption:-1
+      selectedOption: -1,
     };
   },
-  methods:{
-    
-  }
+  methods: {},
 };
 </script>
 

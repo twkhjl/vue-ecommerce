@@ -290,7 +290,7 @@
 import store from "../../store";
 export default {
   created() {
-    this.reload;
+    store.commit('appendScripts',{type:'front'});
   },
   data() {
     return {

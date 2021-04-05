@@ -4,11 +4,131 @@ import router from '../router'
 const apiRootURL = "http://twkhjl.duckdns.org:3001";
 export default createStore({
   state: {
+    scripts: {
+      front: [
+        // Main jQuery
+        {
+          src: "/assets_front/plugins/jquery/dist/jquery.min.js",
+        },
+        
+        // Bootstrap 3.1
+        {
+          src: "/assets_front/plugins/bootstrap/js/bootstrap.min.js",
+        },
+
+        // Bootstrap Touchpin
+        {
+          src: "/assets_front/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js",
+        },
+
+        // Instagram Feed Js
+        {
+          src: "/assets_front/plugins/instafeed-js/instafeed.min.js",
+        },
+
+        // Video Lightbox Plugin
+        {
+          src: "/assets_front/plugins/ekko-lightbox/dist/ekko-lightbox.min.js",
+        },
+
+        // Count Down Js
+        {
+          src: "/assets_front/plugins/SyoTimer/build/jquery.syotimer.min.js",
+        },
+
+        // Revolution Slider
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.tools.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js",
+        },
+        // Revolution Slider
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.tools.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.actions.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.carousel.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.kenburn.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.layeranimation.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.migration.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.navigation.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.parallax.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.slideanims.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js",
+        },
+        {
+          src: "/assets_front/plugins/revolution-slider/assets/warning.js",
+        },
+        // Google Mapl
+        {
+          src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw",
+        },
+        {
+          src: "/assets_front/plugins/google-map/gmap.js",
+        },
+
+        // Main Js File
+        {
+          src: "/assets_front/js/script.js",
+        },
+
+
+
+      ],
+      cp: [
+        {
+          src: "https://code.jquery.com/jquery-3.6.0.min.js",
+          integrity: "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=",
+          crossorigin: "anonymous",
+        },
+        {
+          src:
+            "https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js",
+          integrity:
+            "sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns",
+          crossorigin: "anonymous",
+        },
+        {
+          src: "https://cdn.jsdelivr.net/npm/dropzone@5.9.2/dist/dropzone.min.js"
+        },
+        {
+          src: "https://cdn.jsdelivr.net/npm/admin-lte@3.1.0/dist/js/adminlte.min.js"
+        }
+      ],
+
+    },
+
     api: {
+      apiLoginCpUserURL: `${apiRootURL}/login/cp`,
       apiVerifyFrontUserTokenURL: `${apiRootURL}/jwt/front`,
       apiLoginFrontUserURL: `${apiRootURL}/login/front`,
       apiVerifyCpUserTokenURL: `${apiRootURL}/jwt/cp`,
       apiCatDataURL: `${apiRootURL}/cats`,
+      apiProductsURL: `${apiRootURL}/products`,
 
     },
 
@@ -21,13 +141,26 @@ export default createStore({
       exist: "{0} '{1}' 已存在",
       incorrect: "{0}不正確"
     },
-    frontUser:{}
+    frontUser: {}
 
   },
   getters: {
   },
   mutations: {
-    setFrontUserData(state,payload){
+    appendScripts(state, payload) {
+
+      const scripts = state.scripts[payload.type] || [];
+      if (scripts.length <= 0 || !scripts) return;
+
+      scripts.forEach((o) => {
+        let recaptchaScript = document.createElement("script");
+        for (let k in o) {
+          recaptchaScript.setAttribute(k, o[k]);
+        }
+        document.body.appendChild(recaptchaScript);
+      });
+    },
+    setFrontUserData(state, payload) {
       state.frontUser = payload;
     },
 
@@ -71,36 +204,36 @@ export default createStore({
         body: JSON.stringify({ 'token': token })
       }).then(res => res.json()).then(json => {
         result = Promise.resolve(json);
-      }).catch(err=>{
+      }).catch(err => {
         result = Promise.resolve(err);
       });
       return result;
     },
     async getData(context, payload) {
-      
-      let result='';
+
+      let result = '';
       await fetch(payload.url, {
         method: 'GET',
         headers: { 'content-type': 'application/json' },
       }).then(res => res.json()).then(json => {
         result = Promise.resolve(json);
-      }).catch(err=>{
-        result = Promise.resolve(err);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
       });
       return result;
 
     },
     async postData(context, payload) {
-      
-      let result='';
+
+      let result = '';
       await fetch(payload.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload.body)
       }).then(res => res.json()).then(json => {
         result = Promise.resolve(json);
-      }).catch(err=>{
-        result = Promise.resolve(err);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
       });
       return result;
 

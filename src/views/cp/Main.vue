@@ -451,11 +451,12 @@
 
 <script>
 import authCP from "../../middlewares/authCP";
+import store from "../../store";
 export default {
   beforeCreate() {
     authCP().then((res) => {
-      if (res['error']) {
-        this.$router.push('/cp/login');
+      if (res["error"]) {
+        this.$router.push("/cp/login");
         return;
       }
       this.reload;
@@ -465,10 +466,22 @@ export default {
   data() {
     return {};
   },
+  beforeCreate() {
+    store.commit("appendScripts",{type:'cp'});
+  },
+
+  watch: {
+    $route(to, from) {
+      if (to.path == "/cp/") this.$router.go(this.$router.currentRoute);
+      // console.log(to.path);
+      // console.log(from.path);
+    },
+  },
   methods: {
     logout() {
       localStorage.removeItem("token_cp");
-      this.$router.push('/cp/login');
+      this.$router.push("/cp/login");
+      this.reload;
     },
   },
 };
