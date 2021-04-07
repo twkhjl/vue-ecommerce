@@ -468,6 +468,7 @@ export default {
   },
   beforeCreate() {
     store.commit("appendScripts",{type:'cp'});
+    
   },
 
   watch: {

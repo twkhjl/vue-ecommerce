@@ -29,48 +29,30 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th class="">Item Name</th>
-                      <th class="">Item Price</th>
+                      <th class="">商品名稱</th>
+                      <th class="">價格</th>
+                      <th class="">數量</th>
                       <th class="">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
+
+                    <template v-for="(item,idx) in cart_items" :key="idx">
                     <tr class="">
                       <td class="">
                         <div class="product-info">
-                          <img width="80" src="images/shop/cart/cart-1.jpg" alt="" />
-                          <a href="">Sunglass</a>
+                          <img width="80" :src="item.imgs[0]" alt="" />
+                          <a href="">{{item.name}}</a>
                         </div>
                       </td>
-                      <td class="">$200.00</td>
+                      <td class="">${{item.price}}</td>
+                      <td class="">{{item.qty}}</td>
                       <td class="">
-                        <a class="product-remove" href="">Remove</a>
+                        <a class="product-remove" href="">取消</a>
                       </td>
                     </tr>
-                    <tr class="">
-                      <td class="">
-                        <div class="product-info">
-                          <img width="80" src="images/shop/cart/cart-2.jpg" alt="" />
-                          <a href="">Airspace</a>
-                        </div>
-                      </td>
-                      <td class="">$200.00</td>
-                      <td class="">
-                        <a class="product-remove" href="">Remove</a>
-                      </td>
-                    </tr>
-                    <tr class="">
-                      <td class="">
-                        <div class="product-info">
-                          <img width="80" src="images/shop/cart/cart-3.jpg" alt="" />
-                          <a href="">Bingo</a>
-                        </div>
-                      </td>
-                      <td class="">$200.00</td>
-                      <td class="">
-                        <a class="product-remove" href="">Remove</a>
-                      </td>
-                    </tr>
+                    </template>
+                    
                   </tbody>
                 </table>
                 <a href="#" class="btn btn-main pull-right" @click="checkout()">Checkout</a>
@@ -86,7 +68,24 @@
 </template>
 
 <script>
+import store from '../../../store';
 export default {
+
+  async beforeCreate(){
+    let result = await store.dispatch("postData", {
+        url: store.state.api.apiShowSingleShoppingCartURL,
+        body: {
+          token: localStorage.getItem("token_front"),
+        },
+      });
+      this.cart_items=result.items || [];
+      console.log(this.cart_items);
+  },
+  data(){
+    return {
+      cart_items:[]
+    }
+  },
   methods:{
     checkout(){
       this.$router.push({name:'CheckoutPage'});return;

@@ -105,7 +105,9 @@
                           <a href="#"><i class="tf-ion-ios-heart"></i></a>
                         </li>
                         <li>
-                          <a href=""><i class="tf-ion-android-cart"></i></a>
+                          <a href="" @click.prevent="addToCart(product)"
+                            ><i class="tf-ion-android-cart"></i
+                          ></a>
                         </li>
                       </ul>
                     </div>
@@ -113,9 +115,12 @@
                   <div class="product-content">
                     <h4>
                       <router-link
-                        :to="{ name: 'ProductDetailPage', params: { id: product.id } }"
+                        :to="{
+                          name: 'ProductDetailPage',
+                          params: { id: product.id },
+                        }"
                         >{{ product.name }}
-                        </router-link>
+                      </router-link>
                     </h4>
                     <p class="price">${{ product.price }}</p>
                   </div>
@@ -210,7 +215,55 @@ export default {
       selectedOption: -1,
     };
   },
-  methods: {},
+  methods: {
+    async addToCart(product) {
+      // console.log(JSON.parse(localStorage.getItem('user_front')));return;
+      // console.log(product.id);return;
+
+      store.dispatch("postData", {
+        url: store.state.api.apiAddItemToCartURL,
+        body: {
+          token: localStorage.getItem("token_front"),
+          item: 
+            {
+              product_id: product.id,
+              name:product.name,
+              imgs:product.imgs,
+              qty: 1,
+              price: product.price,
+            },
+          
+        },
+      }).then(res=>{
+
+        if (!res.error) {
+          swal.fire({
+            title: "已加到購物車",
+            showClass: {
+              popup: "",
+              icon: "",
+            },
+            hideClass: {
+              popup: "",
+            },
+          });
+        }
+        else if(res.type && res.type=="exist_error"){
+          swal.fire({
+            title: "物品已存在於購物車",
+            showClass: {
+              popup: "",
+              icon: "",
+            },
+            hideClass: {
+              popup: "",
+            },
+          });
+        }
+
+      })
+    },
+  },
 };
 </script>
 

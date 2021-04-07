@@ -11,16 +11,19 @@ export default createStore({
         } catch (e) {
           return false;
         }
+      },
+      mergeObjArr(a, b, p) {
+        return a.filter( aa => ! b.find ( bb => aa[p] === bb[p]) ).concat(b);
       }
     },
     scripts: {
       front: [
         // Main jQuery
-        {
-          src: "/assets_front/plugins/jquery/dist/jquery.min.js",
-        },
+        // {
+        //   src: "/assets_front/plugins/jquery/dist/jquery.min.js",
+        // },
 
-        // Bootstrap 3.1
+        // Bootstrap 3.3.7
         {
           src: "/assets_front/plugins/bootstrap/js/bootstrap.min.js",
         },
@@ -110,11 +113,11 @@ export default createStore({
 
       ],
       cp: [
-        {
-          src: "https://code.jquery.com/jquery-3.6.0.min.js",
-          integrity: "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=",
-          crossorigin: "anonymous",
-        },
+        // {
+        //   src: "https://code.jquery.com/jquery-3.6.0.min.js",
+        //   integrity: "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=",
+        //   crossorigin: "anonymous",
+        // },
         {
           src:
             "https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js",
@@ -137,9 +140,17 @@ export default createStore({
       apiVerifyFrontUserTokenURL: `${apiRootURL}/jwt/front`,
       apiLoginFrontUserURL: `${apiRootURL}/login/front`,
       apiVerifyCpUserTokenURL: `${apiRootURL}/jwt/cp`,
+      
       apiCatDataURL: `${apiRootURL}/cats`,
+
       apiProductsURL: `${apiRootURL}/products`,
       apiGetSingleProductURL: `${apiRootURL}/product/`,
+      
+      // apiGetShoppingCartsURL: `${apiRootURL}/shoppingCarts/`,
+      apiShowSingleShoppingCartURL: `${apiRootURL}/shoppingCart/show/`,
+      apiUpdateCartItemsURL: `${apiRootURL}/shoppingCart/items/update`,
+      apiAddItemToCartURL: `${apiRootURL}/shoppingCart/item/add`,
+      
 
     },
 
@@ -194,6 +205,13 @@ export default createStore({
         gender: "",
         isLoggedIn: false
       };
+
+      // router.push({ name: "FrontLogin" });
+    },
+    removeFrontUserLocalData(state, payload) {
+      localStorage.removeItem(`token_front`);
+      localStorage.removeItem(`user_front`);
+      localStorage.removeItem(`cart`);
 
       // router.push({ name: "FrontLogin" });
     }

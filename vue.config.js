@@ -1,4 +1,9 @@
+
 module.exports = {
 
-  publicPath:'/'
+
+  publicPath:'/',
+
+
+
 }

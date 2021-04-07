@@ -138,13 +138,13 @@
                 </div>
                 <ul class="text-center cart-buttons">
                   <li>
-                    <router-link to="cart" class="btn btn-small"
+                    <router-link to="/front/cart" class="btn btn-small"
                       >View Cart</router-link
                     >
                   </li>
                   <li>
                     <router-link
-                      to="checkout"
+                      to="/front/checkout"
                       class="btn btn-small btn-solid-border"
                       >Checkout</router-link
                     >

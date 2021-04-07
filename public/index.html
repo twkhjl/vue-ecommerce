@@ -6,7 +6,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
- 
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <!-- front -->
     <!-- Themefisher Icon font -->
     <link
@@ -92,8 +103,6 @@
       integrity="sha512-mxrUXSjrxl8vm5GwafxcqTrEwO1/oBNU25l20GODsysHReZo4uhVISzAKzaABH6/tTfAxZrY2FprmeAP5UZY8A=="
       crossorigin="anonymous"
     />
-
-    
   </head>
   <body>
     <script>
@@ -101,12 +110,11 @@
       const pathname = url.pathname;
       let selector =
         pathname.includes("cp") == true ? ".assets_front" : ".assets_cp";
-        console.log(selector);
       document
         .querySelectorAll(selector)
         .forEach((e) => e.parentNode.removeChild(e));
     </script>
-    
+
     <noscript>
       <strong
         >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
@@ -116,6 +124,5 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-
   </body>
 </html>

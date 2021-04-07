@@ -3,7 +3,8 @@
 </template>
 
 <script>
-// init
+
+
 String.prototype.format = function () {
   // https://blog.tdccc.com.tw/466/
   //可在Javascript中使用如同C#中的string.format (對jQuery String的擴充方法)
