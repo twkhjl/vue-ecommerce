@@ -150,6 +150,7 @@ export default createStore({
       apiShowSingleShoppingCartURL: `${apiRootURL}/shoppingCart/show/`,
       apiUpdateCartItemsURL: `${apiRootURL}/shoppingCart/items/update`,
       apiAddItemToCartURL: `${apiRootURL}/shoppingCart/item/add`,
+      apiRemoveItemFromCartURL: `${apiRootURL}/shoppingCart/item/remove`,
       
 
     },
@@ -268,6 +269,21 @@ export default createStore({
         body: JSON.stringify(payload.body)
       }).then(res => res.json()).then(json => {
         result = Promise.resolve(json);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async handleData(context, payload) {
+
+      let result = '';
+      await fetch(payload.url, {
+        method: payload.method,
+        headers: payload.headers,
+        body: payload.body
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
       }).catch(err => {
         result = Promise.resolve({ error: err });
       });
