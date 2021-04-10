@@ -13,7 +13,7 @@ export default createStore({
         }
       },
       mergeObjArr(a, b, p) {
-        return a.filter( aa => ! b.find ( bb => aa[p] === bb[p]) ).concat(b);
+        return a.filter(aa => !b.find(bb => aa[p] === bb[p])).concat(b);
       }
     },
     scripts: {
@@ -140,18 +140,18 @@ export default createStore({
       apiVerifyFrontUserTokenURL: `${apiRootURL}/jwt/front`,
       apiLoginFrontUserURL: `${apiRootURL}/login/front`,
       apiVerifyCpUserTokenURL: `${apiRootURL}/jwt/cp`,
-      
+
       apiCatDataURL: `${apiRootURL}/cats`,
 
       apiProductsURL: `${apiRootURL}/products`,
       apiGetSingleProductURL: `${apiRootURL}/product/`,
-      
+
       // apiGetShoppingCartsURL: `${apiRootURL}/shoppingCarts/`,
       apiShowSingleShoppingCartURL: `${apiRootURL}/shoppingCart/show/`,
       apiUpdateCartItemsURL: `${apiRootURL}/shoppingCart/items/update`,
       apiAddItemToCartURL: `${apiRootURL}/shoppingCart/item/add`,
       apiRemoveItemFromCartURL: `${apiRootURL}/shoppingCart/item/remove`,
-      
+
 
     },
 
@@ -168,8 +168,18 @@ export default createStore({
 
   },
   getters: {
+    getTotal:(state)=>(cart_items)=>{
+      if (!cart_items || cart_items.length <= 0) return 0;
+      let total = 0;
+
+      cart_items.forEach((v) => {
+        total += v.price * 1 || 0;
+      });
+      return total;
+    }
   },
   mutations: {
+    
     appendScripts(state, payload) {
 
       const scripts = state.scripts[payload.type] || [];
