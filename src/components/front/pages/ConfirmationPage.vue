@@ -18,9 +18,21 @@
 </template>
 
 <script>
+import store from '../../../store';
 export default {
-  beforeCreate(){
-    console.log(this.$route.params.order_number);
+  async beforeCreate(){
+    if(!this.$route.params.order_number){
+      this.$router.push({name:'FrontLogin'});
+      return;
+    }
+    const isloggedIn = await store.dispatch('verifyUserToken',{
+      token_name:'token_front'
+    });
+    if(isloggedIn.error){
+      this.$router.push({name:'FrontLogin'});
+      return;
+    }
+    // console.log(this.$route.params.order_number);
   },
   methods:{
     backToShop(){

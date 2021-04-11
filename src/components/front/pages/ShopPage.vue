@@ -215,54 +215,22 @@ export default {
       selectedOption: -1,
     };
   },
+  
   methods: {
     async addToCart(product) {
-      // console.log(JSON.parse(localStorage.getItem('user_front')));return;
-      // console.log(product.id);return;
+      let result = await store.dispatch("addToCart", { product: product });
 
-      store.dispatch("postData", {
-        url: store.state.api.apiAddItemToCartURL,
-        body: {
-          token: localStorage.getItem("token_front"),
-          item: 
-            {
-              product_id: product.id,
-              name:product.name,
-              imgs:product.imgs,
-              qty: 1,
-              price: product.price,
-            },
-          
-        },
-      }).then(res=>{
+      if (!result.error) {
+        store.getters.alert("已加到購物車");
+        store.state.cart_items = result.items;         
+      } else if (result.type && result.type == "exist_error") {
+        store.getters.alert("物品已存在於購物車");
 
-        if (!res.error) {
-          swal.fire({
-            title: "已加到購物車",
-            showClass: {
-              popup: "",
-              icon: "",
-            },
-            hideClass: {
-              popup: "",
-            },
-          });
-          this.reload;
-        }
-        else if(res.type && res.type=="exist_error"){
-          swal.fire({
-            title: "物品已存在於購物車",
-            showClass: {
-              popup: "",
-              icon: "",
-            },
-            hideClass: {
-              popup: "",
-            },
-          });
-        }
-
-      })
+      } else {
+        console.log(result);
+        store.getters.errorAlert();
+        
+      }
     },
   },
 };

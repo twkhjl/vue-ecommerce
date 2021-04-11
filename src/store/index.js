@@ -1,9 +1,15 @@
 import { createStore } from 'vuex'
 import router from '../router'
 
-const apiRootURL = "http://twkhjl.duckdns.org:3001";
+const apiRootURL = process.env.VUE_APP_API_ROOT_URL;
+const apiVerifyFrontUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_CP_USER_TOKEN_URL;
+const apiVerifyCpUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_FRONT_USER_TOKEN_URL;
+
+const apiShowSingleShoppingCartURL = apiRootURL + process.env.VUE_APP_API_SHOW_SINGLE_SHOPPING_CART_URL;
+const apiAddItemToCartURL = apiRootURL + process.env.VUE_APP_API_ADD_ITEM_TO_CART_URL;
 export default createStore({
   state: {
+    ttt:'',
     commFn: {
       isJSON(str) {
         try {
@@ -168,22 +174,48 @@ export default createStore({
       exist: "{0} '{1}' 已存在",
       incorrect: "{0}不正確"
     },
-    frontUser: {}
-
+    frontUser: {},
+    cart_items:[]
   },
   getters: {
-    getTotal:(state)=>(cart_items)=>{
+    getTotal: (state) => (cart_items) => {
       if (!cart_items || cart_items.length <= 0) return 0;
       let total = 0;
 
       cart_items.forEach((v) => {
-        total += v.price * v.qty*1 || 0;
+        total += v.price * v.qty * 1 || 0;
       });
       return total;
+    },
+    alert: (state) => (title) => {
+      swal.fire({
+        title: title,
+        showClass: {
+          popup: "",
+          icon: "",
+        },
+        hideClass: {
+          popup: "",
+        },
+      });
+
+    },
+    errorAlert:(state)=>{
+      swal.fire({
+        title: "系統錯誤,請聯絡管理員",
+        showClass: {
+          popup: "",
+          icon: "",
+        },
+        hideClass: {
+          popup: "",
+        },
+      });
     }
+    
   },
   mutations: {
-    
+
     appendScripts(state, payload) {
 
       const scripts = state.scripts[payload.type] || [];
@@ -237,12 +269,21 @@ export default createStore({
       let token_name = payload.token_name;
       let token = localStorage.getItem(token_name);
       let result = '';
-
+      let url='';
+      
+      if(!token_name || !['token_front','token_cp'].includes(token_name)){
+        return Promise.resolve({ error: `invalid token name` });
+      }
       if (!token) {
         return Promise.resolve({ error: `blank:${token_name} do not exists` });
       }
+      if(token_name=='token_front'){
+        url=apiVerifyFrontUserTokenURL;
+      }else{
+        url=apiVerifyCpUserTokenURL;
+      }
 
-      await fetch(payload.url, {
+      await fetch(url, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ 'token': token })
@@ -296,6 +337,47 @@ export default createStore({
         method: payload.method,
         headers: payload.headers,
         body: JSON.stringify(payload.body)
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async getCart(context, payload) {
+
+      let result = '';
+      const url = apiShowSingleShoppingCartURL;
+      await fetch(url, {
+        method: 'GET',
+        headers: { authorization: localStorage.getItem("token_front") },
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async addToCart(context, payload) {
+      let result = '';
+      const url = apiAddItemToCartURL;
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          authorization: localStorage.getItem("token_front"),
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          item: {
+            product_id: payload.product.id,
+            name: payload.product.name,
+            imgs: payload.product.imgs,
+            qty: 1,
+            price: payload.product.price,
+          }
+        })
       }).then(res => res.json()).then(res => {
         result = Promise.resolve(res);
       }).catch(err => {

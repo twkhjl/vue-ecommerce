@@ -101,7 +101,7 @@
                 <li><a href="#">Soap</a></li>
               </ul>
             </div>
-            <a href="#" class="btn btn-main mt-20" @click.prevent="addToCart()"
+            <a href="#" class="btn btn-main mt-20" @click.prevent="addToCart(product)"
               >加到購物車</a
             >
           </div>
@@ -141,7 +141,8 @@ export default {
     };
   },
   methods: {
-    async addToCart() {
+    
+    async addToCart(product) {
       let userToken = localStorage.getItem("token_front");
       let user = localStorage.getItem(`user_front`);
       if (!userToken || !user) {
@@ -156,6 +157,21 @@ export default {
       if(!isTokenValid.pass){
         this.showAlert();
         return;
+      }
+
+      let result = await store.dispatch("addToCart", { product: product });
+
+      if (!result.error) {
+        store.getters.alert("已加到購物車");
+        this.reload;
+        this.$emit("update_cart");
+      } else if (result.type && result.type == "exist_error") {
+        store.getters.alert("物品已存在於購物車");
+
+      } else {
+        console.log(result);
+        store.getters.errorAlert();
+        
       }
       
 

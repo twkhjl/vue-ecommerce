@@ -89,11 +89,11 @@
                 class="dropdown-toggle"
                 data-toggle="dropdown"
                 data-hover="dropdown"
-                ><i class="tf-ion-android-cart"></i>Cart</span>
+                ><i class="tf-ion-android-cart"></i>Cart</span
+              >
               <div class="dropdown-menu cart-dropdown">
-                <template v-if="cart_items.length>0">
-
-                  <template v-for="item in cart_items" :key="item.product_id">
+                <template v-if="getCartItemsFn.length > 0">
+                  <template v-for="item in getCartItemsFn" :key="item.product_id">
                     <!-- Cart Item -->
                     <div class="media">
                       <a class="pull-left" href="#">
@@ -104,40 +104,49 @@
                         />
                       </a>
                       <div class="media-body">
-                        <h4 class="media-heading"><a href="">{{item.name}}</a></h4>
+                        <h4 class="media-heading">
+                          <a href="">{{ item.name }}</a>
+                        </h4>
                         <div class="cart-price">
-                          <span>{{item.qty}} x</span>
-                          <span>{{item.price}}</span>
+                          <span>{{ item.qty }} x</span>
+                          <span>{{ item.price }}</span>
                         </div>
-                        <h5><strong>${{item.price}}</strong></h5>
+                        <h5>
+                          <strong>${{ item.price }}</strong>
+                        </h5>
                       </div>
-                      <a href="#" class="remove" @click.prevent="removeItem(item.product_id)"><i class="tf-ion-close"></i></a>
+                      <a
+                        href="#"
+                        class="remove"
+                        @click.prevent="removeItem(item.product_id)"
+                        ><i class="tf-ion-close"></i
+                      ></a>
                     </div>
                     <!-- / Cart Item -->
                   </template>
 
-                <div class="cart-summary">
-                  <span>總計</span>
-                  <span class="total-price">${{ getTotalPrice() }}</span>
-                </div>
-                <ul class="text-center cart-buttons">
-                  <li>
-                    <router-link to="/front/cart" class="btn btn-small"
-                      >查看購物車</router-link>
-                  </li>
-                  <li>
-                    <router-link
-                      to="/front/checkout"
-                      class="btn btn-small btn-solid-border"
-                      >結帳</router-link
-                    >
-                  </li>
-                </ul>
+                  <div class="cart-summary">
+                    <span>總計</span>
+                    <span class="total-price">${{ getTotalPrice() }}</span>
+                  </div>
+                  <ul class="text-center cart-buttons">
+                    <li>
+                      <router-link to="/front/cart" class="btn btn-small"
+                        >查看購物車</router-link
+                      >
+                    </li>
+                    <li>
+                      <router-link
+                        to="/front/checkout"
+                        class="btn btn-small btn-solid-border"
+                        >結帳</router-link
+                      >
+                    </li>
+                  </ul>
                 </template>
                 <template v-else>
                   <span>購物車無內容...</span>
                 </template>
-
               </div>
             </li>
             <!-- / Cart -->
@@ -148,7 +157,8 @@
                 class="dropdown-toggle"
                 data-toggle="dropdown"
                 data-hover="dropdown"
-                ><i class="tf-ion-ios-search-strong"></i> Search</span>
+                ><i class="tf-ion-ios-search-strong"></i> Search</span
+              >
               <ul class="dropdown-menu search-dropdown">
                 <li>
                   <form action="post">
@@ -277,25 +287,36 @@
 <script>
 import store from "../../store";
 export default {
-  async beforeCreate(){
-    let cart = await store.dispatch('handleData',{
-      method:'GET',
-      url:store.state.api.apiShowSingleShoppingCartURL,
-      headers:{'authorization':localStorage.getItem('token_front')}
-    })
-    if(!cart.error) this.cart_items = cart.items;
-  },
+
   created() {
-    store.commit('appendScripts',{type:'front'});
+    store.commit("appendScripts", { type: "front" });
+    this.getCartItems();
   },
   data() {
     return {
       frontUser: JSON.parse(localStorage.getItem("user_front")) || {},
-      cart_items:''
+      cart_items: store.state.cart_items,
     };
   },
+  computed:{
+    getCartItemsFn(){
+      return store.state.cart_items || [];
+    }
+  },
+
   methods: {
-    
+    async getCartItems() {
+      let cart = await store.dispatch("getCart");
+      if(!cart || !cart.items || cart.items.length<=0){
+        store.state.cart_items = [];
+        this.cart_items = [];
+      }
+
+      if (!cart.error){
+        store.state.cart_items = cart.items;
+        this.cart_items = cart.items;
+      }
+    },
     async home() {
       await this.$router.push({ name: "FrontHomePage" });
       // this.$router.go(this.$router.currentRoute);
@@ -312,7 +333,7 @@ export default {
     getTotalPrice() {
       return store.getters.getTotal(this.cart_items);
     },
-     async removeItem(product_id) {
+    async removeItem(product_id) {
       let token = localStorage.getItem("token_front");
       if (!token) {
         return this.$router.push({ name: "FrontLogin" });
@@ -337,15 +358,17 @@ export default {
         });
         return;
       }
-      let idx = this.cart_items.findIndex((v) => v.product_id == product_id);
-      this.cart_items.splice(idx, 1);
-      this.reload;
+      // let idx = this.cart_items.findIndex((v) => v.product_id == product_id);
+      // this.cart_items.splice(idx, 1);
+      this.cart_items = result.items;
+      store.state.cart_items = this.cart_items;
       return;
     },
+
   },
   watch: {
     $route(to, from) {
-      if(to.path=='/front/') this.$router.go(this.$router.currentRoute);
+      if (to.path == "/front/") this.$router.go(this.$router.currentRoute);
       // console.log(to.path);
       // console.log(from.path);
     },

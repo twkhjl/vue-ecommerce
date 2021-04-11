@@ -18,7 +18,10 @@
     <div class="checkout shopping">
       <div class="container">
         <div class="row">
+          <template v-if="getCartItemsFn.length>0">
+
           <div class="col-md-8">
+
             <div class="block billing-details">
               <h4 class="widget-title">訂購人資料</h4>
               <form class="checkout-form">
@@ -59,12 +62,12 @@
                 <div class="payment">
                   <div class="card-details">
                     <form class="checkout-form">
-                      <a
-                        href="#"
-                        class="btn btn-main mt-20"
-                        @click.prevent="placeOrder()"
-                        >確認訂購</a
-                      >
+                        <a
+                          href="#"
+                          class="btn btn-main mt-20"
+                          @click.prevent="placeOrder()"
+                          >確認訂購</a
+                        >
                       <router-link to="/front/cart" class="btn mt-20"
                         >回到購物車</router-link
                       >
@@ -78,9 +81,9 @@
             <div class="product-checkout-details">
               <div class="block">
                 <h4 class="widget-title">訂購明細</h4>
-                <template v-for="item in cart_items" :key="item.product_id">
+                <template v-for="item in getCartItemsFn" :key="item.product_id">
                   <div class="media product-card">
-                    <a class="pull-left" href="product-single.html">
+                    <a class="pull-left" href="#">
                       <img
                         class="media-object"
                         :src="item.imgs[0]"
@@ -113,6 +116,13 @@
               </div>
             </div>
           </div>
+        </template>
+        <template v-else>
+          <h3>購物車無內容...</h3>
+          <router-link to="/front/cart" class="btn btn-main mt-20"
+                        >回到購物車</router-link
+                      >
+        </template>
         </div>
       </div>
     </div>
@@ -122,14 +132,18 @@
 <script>
 import store from "../../../store";
 export default {
-  async beforeCreate() {
-    let result = await store.dispatch("postData", {
-      url: store.state.api.apiShowSingleShoppingCartURL,
-      body: {
-        token: localStorage.getItem("token_front"),
-      },
+  async beforeCreate(){
+    const isloggedIn = await store.dispatch('verifyUserToken',{
+      token_name:'token_front'
     });
-    this.cart_items = JSON.parse(JSON.stringify(result.items)) || [];
+    if(isloggedIn.error){
+      this.$router.push({name:'FrontLogin'});
+      return;
+    }
+  },
+  async created() {
+    let cart = await store.dispatch("getCart");
+    if (!cart.error) this.cart_items = cart.items;
   },
   data() {
     return {
@@ -138,6 +152,11 @@ export default {
       mobile: "",
       address: "",
     };
+  },
+  computed: {
+    getCartItemsFn() {
+      return store.state.cart_items;
+    },
   },
   methods: {
     async placeOrder() {
@@ -159,27 +178,7 @@ export default {
           },
         },
       });
-      if(result.error){
-        swal.fire({
-          title: "系統錯誤,請聯絡管理員",
-          showClass: {
-            popup: "",
-            icon: "",
-          },
-          hideClass: {
-            popup: "",
-          },
-        });
-      };
-      let clearCart = await store.dispatch("handleData", {
-        url: store.state.api.apiClearCartURL,
-        method: "DELETE",
-        headers: {
-          authorization: `${localStorage.getItem("token_front")}`,
-          "content-type": "application/json",
-        },
-      });
-      if(clearCart.error){
+      if (result.error) {
         swal.fire({
           title: "系統錯誤,請聯絡管理員",
           showClass: {
@@ -191,7 +190,27 @@ export default {
           },
         });
       }
-      
+      let clearCart = await store.dispatch("handleData", {
+        url: store.state.api.apiClearCartURL,
+        method: "DELETE",
+        headers: {
+          authorization: `${localStorage.getItem("token_front")}`,
+          "content-type": "application/json",
+        },
+      });
+      if (clearCart.error) {
+        swal.fire({
+          title: "系統錯誤,請聯絡管理員",
+          showClass: {
+            popup: "",
+            icon: "",
+          },
+          hideClass: {
+            popup: "",
+          },
+        });
+      }
+      store.state.cart_items=[];
       this.$router.push({
         name: "ConfirmationPage",
         params: {
@@ -201,7 +220,7 @@ export default {
       return;
     },
     getTotalPrice() {
-      return store.getters.getTotal(this.cart_items);
+      return store.getters.getTotal(this.getCartItemsFn);
     },
   }, //end methods
 };
