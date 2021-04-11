@@ -189,6 +189,7 @@ export default {
             popup: "",
           },
         });
+        return;
       }
       let clearCart = await store.dispatch("handleData", {
         url: store.state.api.apiClearCartURL,

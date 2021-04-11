@@ -116,6 +116,7 @@ import store from "../../../store";
 
 export default {
   async beforeCreate() {
+
     if (!this.$route.params.id) {
       this.$router.push({ name: "ShopPage" });
       return;
@@ -137,7 +138,7 @@ export default {
       productId: "",
       price: "",
       product: "",
-      qty: 3,
+      qty: 1,
     };
   },
   methods: {
@@ -159,12 +160,11 @@ export default {
         return;
       }
 
-      let result = await store.dispatch("addToCart", { product: product });
-
+      this.product.qty = this.qty;
+      let result = await store.dispatch("addToCart", { product: this.product});
       if (!result.error) {
         store.getters.alert("已加到購物車");
-        this.reload;
-        this.$emit("update_cart");
+        store.state.cart_items = result.items;
       } else if (result.type && result.type == "exist_error") {
         store.getters.alert("物品已存在於購物車");
 

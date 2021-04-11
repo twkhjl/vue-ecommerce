@@ -2,11 +2,14 @@ import { createStore } from 'vuex'
 import router from '../router'
 
 const apiRootURL = process.env.VUE_APP_API_ROOT_URL;
-const apiVerifyFrontUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_CP_USER_TOKEN_URL;
-const apiVerifyCpUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_FRONT_USER_TOKEN_URL;
+const apiVerifyFrontUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_FRONT_USER_TOKEN_URL;
+const apiVerifyCpUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_CP_USER_TOKEN_URL;
 
 const apiShowSingleShoppingCartURL = apiRootURL + process.env.VUE_APP_API_SHOW_SINGLE_SHOPPING_CART_URL;
 const apiAddItemToCartURL = apiRootURL + process.env.VUE_APP_API_ADD_ITEM_TO_CART_URL;
+
+const apiGetUserOrderURL = apiRootURL+process.env.VUE_APP_API_GET_USER_ORDER_URL;
+const apiCancelOrderURL = apiRootURL+process.env.VUE_APP_API_CANCEL_ORDER_URL;
 export default createStore({
   state: {
     ttt:'',
@@ -374,10 +377,46 @@ export default createStore({
             product_id: payload.product.id,
             name: payload.product.name,
             imgs: payload.product.imgs,
-            qty: 1,
+            qty: payload.product.qty || 1,
             price: payload.product.price,
           }
         })
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async getUserOrder(context, payload) {
+      let result = '';
+      const url = apiGetUserOrderURL;
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: localStorage.getItem("token_front"),
+          'content-type': 'application/json'
+        }
+        
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async cancelOrder(context, payload) {
+      let result = '';
+      const url = apiCancelOrderURL+'/'+payload.order_id;
+      await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          authorization: localStorage.getItem("token_front"),
+          'content-type': 'application/json'
+        }
+        
       }).then(res => res.json()).then(res => {
         result = Promise.resolve(res);
       }).catch(err => {

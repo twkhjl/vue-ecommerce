@@ -127,7 +127,7 @@
 
                   <div class="cart-summary">
                     <span>總計</span>
-                    <span class="total-price">${{ getTotalPrice() }}</span>
+                    <span class="total-price">${{ getTotalPriceFn }}</span>
                   </div>
                   <ul class="text-center cart-buttons">
                     <li>
@@ -301,7 +301,10 @@ export default {
   computed:{
     getCartItemsFn(){
       return store.state.cart_items || [];
-    }
+    },
+    getTotalPriceFn() {
+      return store.getters.getTotal(store.state.cart_items);
+    },
   },
 
   methods: {
@@ -330,9 +333,7 @@ export default {
       // localStorage.removeItem("token_front");
       // this.$router.push({ name: "FrontLogin" });
     },
-    getTotalPrice() {
-      return store.getters.getTotal(this.cart_items);
-    },
+    
     async removeItem(product_id) {
       let token = localStorage.getItem("token_front");
       if (!token) {

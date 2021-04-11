@@ -20,9 +20,9 @@
       <div class="row">
         <div class="col-md-12">
           <ul class="list-inline dashboard-menu text-center">
-            <li><router-link class="active" to="/">Dashboard</router-link></li>
-            <li><router-link to="order">Orders</router-link></li>
-            <li><router-link to="profileDetail">Profile Details</router-link></li>
+            <li><router-link :class="setActive('dashboard')" to="/front/dashboard/">會員中心</router-link></li>
+            <li><router-link :class="setActive('order')" to="/front/dashboard/order">訂單</router-link></li>
+            <li><router-link :class="setActive('profileDetail')" to="/front/dashboard/profileDetail">個人資料</router-link></li>
           </ul>
 
           <router-view></router-view>
@@ -36,7 +36,30 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return {
+      activeTab: 'dashboard'
+    }
+  },
+  methods:{
+    setActive(tabName){
+      if(this.activeTab==tabName) return 'active';
+      return '';
+    }
+  },
+
+  watch: {
+    $route(to, from) {
+      // if (to.path == "/front/") this.$router.go(this.$router.currentRoute);
+      // console.log(to.path);
+      // console.log(from.path);
+      this.activeTab='dashboard';
+      if(to.path.includes('/dashboard/order')) this.activeTab='order';
+      if(to.path.includes('/dashboard/profileDetail')) this.activeTab='profileDetail';
+    },
+  },
+};
 </script>
 
 <style>
