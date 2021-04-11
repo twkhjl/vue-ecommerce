@@ -151,6 +151,10 @@ export default createStore({
       apiUpdateCartItemsURL: `${apiRootURL}/shoppingCart/items/update`,
       apiAddItemToCartURL: `${apiRootURL}/shoppingCart/item/add`,
       apiRemoveItemFromCartURL: `${apiRootURL}/shoppingCart/item/remove`,
+      apiClearCartURL: `${apiRootURL}/shoppingCart/cart/items/remove/all`,
+
+      apiPlaceOrderURL: `${apiRootURL}/order/add`,
+
 
 
     },
@@ -173,7 +177,7 @@ export default createStore({
       let total = 0;
 
       cart_items.forEach((v) => {
-        total += v.price * 1 || 0;
+        total += v.price * v.qty*1 || 0;
       });
       return total;
     }
@@ -291,7 +295,7 @@ export default createStore({
       await fetch(payload.url, {
         method: payload.method,
         headers: payload.headers,
-        body: payload.body
+        body: JSON.stringify(payload.body)
       }).then(res => res.json()).then(res => {
         result = Promise.resolve(res);
       }).catch(err => {

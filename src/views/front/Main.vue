@@ -91,65 +91,53 @@
                 data-hover="dropdown"
                 ><i class="tf-ion-android-cart"></i>Cart</span>
               <div class="dropdown-menu cart-dropdown">
-                <!-- Cart Item -->
-                <div class="media">
-                  <a class="pull-left" href="#">
-                    <img
-                      class="media-object"
-                      src="/assets_front/images/shop/cart/cart-1.jpg"
-                      alt="image"
-                    />
-                  </a>
-                  <div class="media-body">
-                    <h4 class="media-heading"><a href="">Ladies Bag</a></h4>
-                    <div class="cart-price">
-                      <span>1 x</span>
-                      <span>1250.00</span>
+                <template v-if="cart_items.length>0">
+
+                  <template v-for="item in cart_items" :key="item.product_id">
+                    <!-- Cart Item -->
+                    <div class="media">
+                      <a class="pull-left" href="#">
+                        <img
+                          class="media-object"
+                          :src="item.imgs[0]"
+                          alt="image"
+                        />
+                      </a>
+                      <div class="media-body">
+                        <h4 class="media-heading"><a href="">{{item.name}}</a></h4>
+                        <div class="cart-price">
+                          <span>{{item.qty}} x</span>
+                          <span>{{item.price}}</span>
+                        </div>
+                        <h5><strong>${{item.price}}</strong></h5>
+                      </div>
+                      <a href="#" class="remove" @click.prevent="removeItem(item.product_id)"><i class="tf-ion-close"></i></a>
                     </div>
-                    <h5><strong>$1200</strong></h5>
-                  </div>
-                  <a href="#" class="remove"><i class="tf-ion-close"></i></a>
-                </div>
-                <!-- / Cart Item -->
-                <!-- Cart Item -->
-                <div class="media">
-                  <a class="pull-left" href="#">
-                    <img
-                      class="media-object"
-                      src="/assets_front/images/shop/cart/cart-2.jpg"
-                      alt="image"
-                    />
-                  </a>
-                  <div class="media-body">
-                    <h4 class="media-heading"><a href="">Ladies Bag</a></h4>
-                    <div class="cart-price">
-                      <span>1 x</span>
-                      <span>1250.00</span>
-                    </div>
-                    <h5><strong>$1200</strong></h5>
-                  </div>
-                  <a href="#" class="remove"><i class="tf-ion-close"></i></a>
-                </div>
-                <!-- / Cart Item -->
+                    <!-- / Cart Item -->
+                  </template>
 
                 <div class="cart-summary">
-                  <span>Total</span>
-                  <span class="total-price">$1799.00</span>
+                  <span>總計</span>
+                  <span class="total-price">${{ getTotalPrice() }}</span>
                 </div>
                 <ul class="text-center cart-buttons">
                   <li>
                     <router-link to="/front/cart" class="btn btn-small"
-                      >View Cart</router-link
-                    >
+                      >查看購物車</router-link>
                   </li>
                   <li>
                     <router-link
                       to="/front/checkout"
                       class="btn btn-small btn-solid-border"
-                      >Checkout</router-link
+                      >結帳</router-link
                     >
                   </li>
                 </ul>
+                </template>
+                <template v-else>
+                  <span>購物車無內容...</span>
+                </template>
+
               </div>
             </li>
             <!-- / Cart -->
@@ -289,12 +277,21 @@
 <script>
 import store from "../../store";
 export default {
+  async beforeCreate(){
+    let cart = await store.dispatch('handleData',{
+      method:'GET',
+      url:store.state.api.apiShowSingleShoppingCartURL,
+      headers:{'authorization':localStorage.getItem('token_front')}
+    })
+    if(!cart.error) this.cart_items = cart.items;
+  },
   created() {
     store.commit('appendScripts',{type:'front'});
   },
   data() {
     return {
       frontUser: JSON.parse(localStorage.getItem("user_front")) || {},
+      cart_items:''
     };
   },
   methods: {
@@ -311,6 +308,39 @@ export default {
       // this.$router.go(this.$router.currentRoute);
       // localStorage.removeItem("token_front");
       // this.$router.push({ name: "FrontLogin" });
+    },
+    getTotalPrice() {
+      return store.getters.getTotal(this.cart_items);
+    },
+     async removeItem(product_id) {
+      let token = localStorage.getItem("token_front");
+      if (!token) {
+        return this.$router.push({ name: "FrontLogin" });
+      }
+      let result = await store.dispatch("handleData", {
+        url: `${store.state.api.apiRemoveItemFromCartURL}/${product_id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (result.error) {
+        swal.fire({
+          title: "刪除失敗: 系統錯誤,請聯絡管理員",
+          showClass: {
+            popup: "",
+            icon: "",
+          },
+          hideClass: {
+            popup: "",
+          },
+        });
+        return;
+      }
+      let idx = this.cart_items.findIndex((v) => v.product_id == product_id);
+      this.cart_items.splice(idx, 1);
+      this.reload;
+      return;
     },
   },
   watch: {

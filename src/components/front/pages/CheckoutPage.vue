@@ -20,110 +20,54 @@
         <div class="row">
           <div class="col-md-8">
             <div class="block billing-details">
-              <h4 class="widget-title">Billing Details</h4>
+              <h4 class="widget-title">訂購人資料</h4>
               <form class="checkout-form">
                 <div class="form-group">
-                  <label for="full_name">Full Name</label>
+                  <label for="full_name">收件人姓名</label>
                   <input
                     type="text"
                     class="form-control"
                     id="full_name"
                     placeholder=""
+                    v-model="name"
                   />
                 </div>
                 <div class="form-group">
-                  <label for="user_address">Address</label>
+                  <label for="full_name">電話</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="full_name"
+                    placeholder=""
+                    v-model="mobile"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="user_address">地址</label>
                   <input
                     type="text"
                     class="form-control"
                     id="user_address"
                     placeholder=""
-                  />
-                </div>
-                <div class="checkout-country-code clearfix">
-                  <div class="form-group">
-                    <label for="user_post_code">Zip Code</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="user_post_code"
-                      name="zipcode"
-                      value=""
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="user_city">City</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="user_city"
-                      name="city"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="user_country">Country</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="user_country"
-                    placeholder=""
+                    v-model="address"
                   />
                 </div>
               </form>
             </div>
             <div class="block">
-              <h4 class="widget-title">Payment Method</h4>
-              <p>Credit Cart Details (Secure payment)</p>
               <div class="checkout-product-details">
                 <div class="payment">
                   <div class="card-details">
                     <form class="checkout-form">
-                      <div class="form-group">
-                        <label for="card-number"
-                          >Card Number <span class="required">*</span></label
-                        >
-                        <input
-                          id="card-number"
-                          class="form-control"
-                          type="tel"
-                          placeholder="•••• •••• •••• ••••"
-                        />
-                      </div>
-                      <div class="form-group half-width padding-right">
-                        <label for="card-expiry"
-                          >Expiry (MM/YY) <span class="required">*</span></label
-                        >
-                        <input
-                          id="card-expiry"
-                          class="form-control"
-                          type="tel"
-                          placeholder="MM / YY"
-                        />
-                      </div>
-                      <div class="form-group half-width padding-left">
-                        <label for="card-cvc"
-                          >Card Code <span class="required">*</span></label
-                        >
-                        <input
-                          id="card-cvc"
-                          class="form-control"
-                          type="tel"
-                          maxlength="4"
-                          placeholder="CVC"
-                        />
-                      </div>
                       <a
                         href="#"
                         class="btn btn-main mt-20"
                         @click.prevent="placeOrder()"
                         >確認訂購</a
                       >
-                      <router-link
-                        to="/front/cart"
-                        class="btn mt-20"
-                        >回到購物車</router-link>
+                      <router-link to="/front/cart" class="btn mt-20"
+                        >回到購物車</router-link
+                      >
                     </form>
                   </div>
                 </div>
@@ -133,7 +77,7 @@
           <div class="col-md-4">
             <div class="product-checkout-details">
               <div class="block">
-                <h4 class="widget-title">Order Summary</h4>
+                <h4 class="widget-title">訂購明細</h4>
                 <template v-for="item in cart_items" :key="item.product_id">
                   <div class="media product-card">
                     <a class="pull-left" href="product-single.html">
@@ -163,11 +107,8 @@
                         </li> -->
                 </ul>
                 <div class="summary-total">
-                  <span>Total</span>
+                  <span>總計</span>
                   <span>${{ getTotalPrice() }}</span>
-                </div>
-                <div class="verified-icon">
-                  <img src="/assets_front/images/shop/verified.png" />
                 </div>
               </div>
             </div>
@@ -193,18 +134,76 @@ export default {
   data() {
     return {
       cart_items: [],
+      name: "",
+      mobile: "",
+      address: "",
     };
   },
   methods: {
-    placeOrder() {
-      this.$router.push({ name: "ConfirmationPage" });
+    async placeOrder() {
+      let result = await store.dispatch("handleData", {
+        url: store.state.api.apiPlaceOrderURL,
+        method: "POST",
+        headers: {
+          authorization: `${localStorage.getItem("token_front")}`,
+          "content-type": "application/json",
+        },
+
+        body: {
+          order_details: this.cart_items,
+          total: this.getTotalPrice(),
+          recpient_details: {
+            name: this.name,
+            mobile: this.mobile,
+            addres: this.address,
+          },
+        },
+      });
+      if(result.error){
+        swal.fire({
+          title: "系統錯誤,請聯絡管理員",
+          showClass: {
+            popup: "",
+            icon: "",
+          },
+          hideClass: {
+            popup: "",
+          },
+        });
+      };
+      let clearCart = await store.dispatch("handleData", {
+        url: store.state.api.apiClearCartURL,
+        method: "DELETE",
+        headers: {
+          authorization: `${localStorage.getItem("token_front")}`,
+          "content-type": "application/json",
+        },
+      });
+      if(clearCart.error){
+        swal.fire({
+          title: "系統錯誤,請聯絡管理員",
+          showClass: {
+            popup: "",
+            icon: "",
+          },
+          hideClass: {
+            popup: "",
+          },
+        });
+      }
+      
+      this.$router.push({
+        name: "ConfirmationPage",
+        params: {
+          order_number: result.order_number,
+        },
+      });
       return;
     },
     getTotalPrice() {
       return store.getters.getTotal(this.cart_items);
-      
     },
-  },//end methods
+  }, //end methods
 };
 </script>
 

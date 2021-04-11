@@ -247,6 +247,7 @@ export default {
               popup: "",
             },
           });
+          this.reload;
         }
         else if(res.type && res.type=="exist_error"){
           swal.fire({

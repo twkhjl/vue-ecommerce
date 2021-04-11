@@ -41,11 +41,39 @@
                           <td class="">
                             <div class="product-info">
                               <img width="80" :src="item.imgs[0]" alt="" />
-                              <a href="">{{ item.name }}</a>
+                              <router-link
+                                :to="{
+                                  name: 'ProductDetailPage',
+                                  params: { id: item.product_id },
+                                }"
+                                >{{ item.name }}
+                              </router-link>
                             </div>
                           </td>
                           <td class="">${{ item.price }}</td>
-                          <td class="">{{ item.qty }}</td>
+                          <td class="">
+                            <button
+                              @click.prevent="
+                                changeQty({
+                                  type: '-',
+                                  product_id: item.product_id,
+                                })
+                              "
+                            >
+                              -
+                            </button>
+                            {{ item.qty }}
+                            <button
+                              @click.prevent="
+                                changeQty({
+                                  type: '+',
+                                  product_id: item.product_id,
+                                })
+                              "
+                            >
+                              +
+                            </button>
+                          </td>
                           <td class="">
                             <a
                               class="product-remove"
@@ -61,8 +89,14 @@
                   <a
                     href="#"
                     class="btn btn-main pull-right"
-                    @click="checkout()"
-                    >Checkout</a
+                    @click.prevent="checkout()"
+                    >確認無誤,進行結帳</a
+                  >
+                  <a
+                    href="/front/shop"
+                    class="btn btn-main pull-right"
+                    style="background: #fff; color: black"
+                    >繼續購物</a
                   >
                 </form>
               </div>
@@ -78,11 +112,10 @@
 import store from "../../../store";
 export default {
   async beforeCreate() {
-    let result = await store.dispatch("postData", {
+    let result = await store.dispatch("handleData", {
+      method:'GET',
       url: store.state.api.apiShowSingleShoppingCartURL,
-      body: {
-        token: localStorage.getItem("token_front"),
-      },
+      headers:{'authorization':localStorage.getItem('token_front')}
     });
     this.cart_items = JSON.parse(JSON.stringify(result.items)) || [];
   },
@@ -92,12 +125,34 @@ export default {
     };
   },
   methods: {
-    checkout() {
+    changeQty(params) {
+      let idx = this.cart_items.findIndex(
+        (o) => o.product_id == params.product_id
+      );
+
+      if (params.type == "-") {
+        if (this.cart_items[idx].qty > 1) {
+          this.cart_items[idx].qty--;
+        }
+      }
+      if (params.type == "+") {
+        this.cart_items[idx].qty++;
+      }
+      return;
+    },
+    async checkout() {
+      // update cart before goto checkout page
+      let result = await store.dispatch("postData", {
+        url: store.state.api.apiUpdateCartItemsURL,
+        body: {
+          token: localStorage.getItem("token_front"),
+          items: JSON.stringify(this.cart_items),
+        },
+      });
       this.$router.push({ name: "CheckoutPage" });
       return;
     },
     async removeItem(product_id) {
-
       let token = localStorage.getItem("token_front");
       if (!token) {
         return this.$router.push({ name: "FrontLogin" });
@@ -123,13 +178,8 @@ export default {
         return;
       }
       let idx = this.cart_items.findIndex((v) => v.product_id == product_id);
-      this.cart_items.splice(idx,1);return;
-      let tmp_items = this.cart_items;
-      this.cart_items = [];
-      this.cart_items = tmp_items.filter((v) => v.product_id !== product_id);
-      // if(idx && idx!==-1) this.cart_items.splice(idx,1);
-
-      // if(idx && idx!==-1) this.cart_items[idx]="";
+      this.cart_items.splice(idx, 1);
+      return;
     },
   },
 };
