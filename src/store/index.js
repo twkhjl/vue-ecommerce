@@ -2,14 +2,31 @@ import { createStore } from 'vuex'
 import router from '../router'
 
 const apiRootURL = process.env.VUE_APP_API_ROOT_URL;
-const apiVerifyFrontUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_FRONT_USER_TOKEN_URL;
-const apiVerifyCpUserTokenURL=apiRootURL + process.env.VUE_APP_API_VERIFY_CP_USER_TOKEN_URL;
 
-const apiShowSingleShoppingCartURL = apiRootURL + process.env.VUE_APP_API_SHOW_SINGLE_SHOPPING_CART_URL;
-const apiAddItemToCartURL = apiRootURL + process.env.VUE_APP_API_ADD_ITEM_TO_CART_URL;
+const apiLoginCpUserURL= apiRootURL+process.env.VUE_APP_API_LOGIN_CP_USER_URL;
+const apiVerifyCpUserTokenURL= apiRootURL + process.env.VUE_APP_API_VERIFY_CP_USER_TOKEN_URL;
 
-const apiGetUserOrderURL = apiRootURL+process.env.VUE_APP_API_GET_USER_ORDER_URL;
-const apiCancelOrderURL = apiRootURL+process.env.VUE_APP_API_CANCEL_ORDER_URL;
+const apiVerifyFrontUserTokenURL= apiRootURL + process.env.VUE_APP_API_VERIFY_FRONT_USER_TOKEN_URL;
+const apiLoginFrontUserURL= apiRootURL + process.env.VUE_APP_API_LOGIN_FRONT_USER_URL;
+const apiCreateNewFrontUserURL = apiRootURL + process.env.VUE_APP_API_CREATE_NEW_FRONT_USER_URL;
+
+const apiCatDataURL= apiRootURL + process.env.VUE_APP_API_CAT_DATA_URL;
+
+const apiProductsURL= apiRootURL + process.env.VUE_APP_API_PRODUCTS_URL;
+const apiGetSingleProductURL= apiRootURL + process.env.VUE_APP_API_GET_SINGLE_PRODUCT_URL;
+const apiUploadProductimgsURL = apiRootURL + process.env.VUE_APP_API_UPLOAD_PRODUCT_IMGS_URL;
+
+const apiShowSingleShoppingCartURL= apiRootURL + process.env.VUE_APP_API_SHOW_SINGLE_SHOPPING_CART_URL;
+const apiUpdateCartItemsURL= apiRootURL + process.env.VUE_APP_API_UPDATE_CART_ITEMS_URL;
+const apiAddItemToCartURL= apiRootURL + process.env.VUE_APP_API_ADD_ITEM_TO_CART_URL;
+const apiRemoveItemFromCartURL= apiRootURL + process.env.VUE_APP_API_REMOVE_ITEM_FROM_CART_URL;
+const apiClearCartURL= apiRootURL + process.env.VUE_APP_API_CLEAR_CART_URL;
+
+const apiGetUserOrderURL=apiRootURL+process.env.VUE_APP_API_GET_USER_ORDER_URL;
+const apiPlaceOrderURL= apiRootURL + process.env.VUE_APP_API_PLACE_ORDER_URL;
+const apiCancelOrderURL= apiRootURL + process.env.VUE_APP_API_CANCEL_ORDER_URL;
+const apiCpGetAllOrdersURL = apiRootURL + process.env.VUE_APP_API_CP_GET_ALL_ORDERS_URL;
+
 export default createStore({
   state: {
     ttt:'',
@@ -145,26 +162,30 @@ export default createStore({
     },
 
     api: {
-      apiLoginCpUserURL: `${apiRootURL}/login/cp`,
-      apiVerifyFrontUserTokenURL: `${apiRootURL}/jwt/front`,
-      apiLoginFrontUserURL: `${apiRootURL}/login/front`,
-      apiVerifyCpUserTokenURL: `${apiRootURL}/jwt/cp`,
+      apiLoginCpUserURL,
+      apiVerifyCpUserTokenURL,
+      
+      apiVerifyFrontUserTokenURL,
+      apiLoginFrontUserURL,
+      apiCreateNewFrontUserURL,
+      
+      apiCatDataURL,
+      
+      apiProductsURL,
+      apiGetSingleProductURL,
+      apiUploadProductimgsURL,
 
-      apiCatDataURL: `${apiRootURL}/cats`,
+      apiShowSingleShoppingCartURL,
+      apiUpdateCartItemsURL,
+      apiAddItemToCartURL,
+      apiRemoveItemFromCartURL,
+      apiClearCartURL,
+      
+      apiGetUserOrderURL,
+      apiPlaceOrderURL,
+      apiCancelOrderURL,
 
-      apiProductsURL: `${apiRootURL}/products`,
-      apiGetSingleProductURL: `${apiRootURL}/product/`,
-
-      // apiGetShoppingCartsURL: `${apiRootURL}/shoppingCarts/`,
-      apiShowSingleShoppingCartURL: `${apiRootURL}/shoppingCart/show/`,
-      apiUpdateCartItemsURL: `${apiRootURL}/shoppingCart/items/update`,
-      apiAddItemToCartURL: `${apiRootURL}/shoppingCart/item/add`,
-      apiRemoveItemFromCartURL: `${apiRootURL}/shoppingCart/item/remove`,
-      apiClearCartURL: `${apiRootURL}/shoppingCart/cart/items/remove/all`,
-
-      apiPlaceOrderURL: `${apiRootURL}/order/add`,
-
-
+      apiCpGetAllOrdersURL,
 
     },
 
@@ -377,7 +398,7 @@ export default createStore({
             product_id: payload.product.id,
             name: payload.product.name,
             imgs: payload.product.imgs,
-            qty: payload.product.qty || 1,
+            qty: payload.qty || 1,
             price: payload.product.price,
           }
         })
@@ -414,6 +435,24 @@ export default createStore({
         method: 'DELETE',
         headers: {
           authorization: localStorage.getItem("token_front"),
+          'content-type': 'application/json'
+        }
+        
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async getAllOrders(context, payload) {
+      let result = '';
+      const url = apiCpGetAllOrdersURL;
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: localStorage.getItem("token_cp"),
           'content-type': 'application/json'
         }
         

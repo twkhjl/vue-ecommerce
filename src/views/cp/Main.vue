@@ -59,7 +59,7 @@
         <!-- user Dropdown Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="far fa-user"></i>
+          您好,{{ getuserName }} <i class="far fa-user"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
             <a href="#" class="dropdown-item">
@@ -251,6 +251,12 @@
             role="menu"
             data-accordion="false"
           >
+            <li class="nav-item">
+              <router-link to="/cp/orders" class="nav-link">
+                <i class="fas fa-circle nav-icon"></i>
+                <p>訂單列表</p>
+              </router-link>
+            </li>
             <li class="nav-item">
               <router-link to="/cp/customers" class="nav-link">
                 <i class="fas fa-circle nav-icon"></i>
@@ -450,25 +456,30 @@
 </template>
 
 <script>
-import authCP from "../../middlewares/authCP";
 import store from "../../store";
 export default {
-  beforeCreate() {
-    authCP().then((res) => {
-      if (res["error"]) {
-        this.$router.push("/cp/login");
-        return;
-      }
-      this.reload;
-    });
-  },
-
   data() {
     return {};
   },
-  beforeCreate() {
-    store.commit("appendScripts",{type:'cp'});
+  async beforeCreate() {
+
+    let isUserLoggedIn = await store.dispatch('verifyUserToken',{
+      token_name:'token_cp'
+    });
+    if(isUserLoggedIn.error){
+      localStorage.removeItem("token_cp");
+      this.$router.push("/cp/login");
+      return;
+    }
+    store.commit("appendScripts", { type: "cp" });
     
+  },
+  computed:{
+    getuserName(){
+      let user_data = JSON.parse(localStorage.getItem('user_cp'));
+      if(!user_data || !user_data.username) return '';
+      return user_data.username;
+    }
   },
 
   watch: {
@@ -481,6 +492,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token_cp");
+      localStorage.removeItem("user_cp");
       this.$router.push("/cp/login");
       this.reload;
     },

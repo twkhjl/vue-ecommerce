@@ -103,7 +103,7 @@ export default {
         this[k].error="";
       }
 
-      fetch("http://twkhjl.duckdns.org:3001/users/front", {
+      fetch(store.state.api.apiCreateNewFrontUserURL, {
         headers: { "content-type": "application/json" },
         method: "POST",
         body: JSON.stringify(bodyData),

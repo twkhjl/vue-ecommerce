@@ -108,6 +108,7 @@
 
 
 <script>
+import store from '../store';
 export default {
   data() {
     return {
@@ -122,7 +123,7 @@ export default {
     submitFile() {
       let formData = new FormData();
       formData.append("file", this.file);
-      fetch("http://twkhjl.duckdns.org:3001/products/imgs/upload", {
+      fetch(store.state.api.apiUploadProductimgsURL, {
         method: "POST",
         headers: {
           // "content-type": "multipart/form-data",
@@ -148,7 +149,7 @@ export default {
 
     var myDropzone = new Dropzone(document.body, {
       // Make the whole body a dropzone
-      url: "http://twkhjl.duckdns.org:3001/products/imgs/upload", // Set the url
+      url: store.state.api.apiUploadProductimgsURL, // Set the url
       method: "post",
       paramName: "file",
       resizeMimeType:'image/jpeg',

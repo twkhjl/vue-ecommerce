@@ -243,7 +243,10 @@ export default {
       );
     },
     async addToCart(product) {
-      let result = await store.dispatch("addToCart", { product: product });
+      let result = await store.dispatch("addToCart", { 
+        product: product,
+        qty:1
+        });
       if (!result.error) {
         store.getters.alert("已加到購物車");
         store.state.cart_items = result.items;

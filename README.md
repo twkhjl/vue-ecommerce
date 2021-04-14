@@ -1,4 +1,6 @@
-# admin-panel
+# vue-ecommerce
+
+a simple frontend ecommerce project
 
 ## Project setup
 ```

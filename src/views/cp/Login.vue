@@ -72,6 +72,18 @@
 <script>
 import store from "../../store";
 export default {
+  async beforeCreate(){
+
+    let isUserLoggedIn = await store.dispatch('verifyUserToken',{
+      token_name:'token_cp'
+    });
+    // if(!isUserLoggedIn.error){
+    if(isUserLoggedIn.success){
+      this.$router.push("/cp/");
+      return;
+    }
+
+  },
   data() {
     return {
       username: "",
@@ -106,6 +118,10 @@ export default {
       }
       if (result.token) {
         localStorage.setItem("token_cp", result.token);
+        localStorage.setItem("user_cp",JSON.stringify({
+          username:result.username,
+          user_id:result.id
+        }));
         window.location.href = "/cp/";
         // this.$router.push('/cp/');
       }

@@ -59,7 +59,7 @@ export default {
    login() {
       let bodyData = { email: this.email, password: this.password };
 
-      fetch("http://twkhjl.duckdns.org:3001/login/front", {
+      fetch(store.state.api.apiLoginFrontUserURL, {
         headers: {
           "content-type": "application/json",
         },

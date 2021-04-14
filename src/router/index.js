@@ -8,6 +8,7 @@ import HomePage from '../components/cp/pages/HomePage.vue'
 import ProductsPage from '../components/cp/pages/ProductsPage.vue'
 import CustomersPage from '../components/cp/pages/CustomersPage.vue'
 import CatsPage from '../components/cp/pages/CatsPage.vue'
+import OrdersPage from '../components/cp/pages/OrdersPage.vue'
 
 
 import FrontMain from '../views/front/Main.vue'
@@ -73,29 +74,29 @@ const routes = [
         path: 'dashboard',
         name: 'DashboardMain',
         component: DashboardMain,
-        children:[
+        children: [
           {
             path: '',
             name: 'DashboardHomePage',
             component: DashboardHomePage
-    
+
           },
           {
             path: 'order',
             name: 'OrderPage',
             component: OrderPage
-    
+
           },
           {
             path: 'profileDetail',
             name: 'ProfileDetailPage',
             component: ProfileDetailPage
-    
+
           }
         ]
 
       },
-      
+
       {
         path: 'shop',
         name: 'ShopPage',
@@ -120,7 +121,7 @@ const routes = [
         component: CheckoutPage
 
       },
-     
+
     ]
   },
   {
@@ -148,6 +149,12 @@ const routes = [
         path: '',
         name: 'HomePage',
         component: HomePage
+
+      },
+      {
+        path: 'orders',
+        name: 'OrdersPage',
+        component: OrdersPage
 
       },
       {

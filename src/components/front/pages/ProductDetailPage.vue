@@ -60,48 +60,24 @@
               {{ product.description }}
             </p>
 
-            <div class="color-swatches">
-              <span>color:</span>
-              <ul>
-                <li>
-                  <a href="" class="swatch-violet"></a>
-                </li>
-                <li>
-                  <a href="" class="swatch-black"></a>
-                </li>
-                <li>
-                  <a href="" class="swatch-cream"></a>
-                </li>
-              </ul>
-            </div>
-            <div class="product-size">
-              <span>Size:</span>
-              <select class="form-control">
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-              </select>
-            </div>
+            
             <div class="product-quantity">
-              <span>Quantity:</span>
+              <span>數量:</span>
               <div class="product-quantity-slider">
                 <input
                   id="product-quantity"
-                  type="text"
+                  type="number"
+                  min=1
                   v-model="qty"
                   name="product-quantity"
                 />
               </div>
             </div>
-            <div class="product-category">
-              <span>Categories:</span>
-              <ul>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Soap</a></li>
-              </ul>
-            </div>
-            <a href="#" class="btn btn-main mt-20" @click.prevent="addToCart(product)"
+            
+            <a
+              href="#"
+              class="btn btn-main mt-20"
+              @click.prevent="addToCart(product)"
               >加到購物車</a
             >
           </div>
@@ -116,7 +92,6 @@ import store from "../../../store";
 
 export default {
   async beforeCreate() {
-
     if (!this.$route.params.id) {
       this.$router.push({ name: "ShopPage" });
       return;
@@ -141,8 +116,20 @@ export default {
       qty: 1,
     };
   },
+  watch:{
+    qty:{
+      handler(val,oldVal){
+        if(val<=0) this.qty=1;
+
+      }
+    }
+  },
+  
   methods: {
     
+    ttt(){
+      console.log(this.qty);
+    },
     async addToCart(product) {
       let userToken = localStorage.getItem("token_front");
       let user = localStorage.getItem(`user_front`);
@@ -150,50 +137,72 @@ export default {
         this.showAlert();
         return;
       }
-      let token = localStorage.getItem("token_front");
-      let isTokenValid = await store.dispatch('verifyUserToken',{
-        'url': store.state.api.apiVerifyFrontUserTokenURL,
-        'token_name': 'token_front'
-        });
-      if(!isTokenValid.pass){
+      let isTokenValid = await store.dispatch("verifyUserToken", {
+        url: store.state.api.apiVerifyFrontUserTokenURL,
+        token_name: "token_front",
+      });
+      if (!isTokenValid.pass) {
         this.showAlert();
         return;
       }
 
       this.product.qty = this.qty;
-      let result = await store.dispatch("addToCart", { product: this.product});
+      let result = await store.dispatch("addToCart", {
+        product: this.product,
+        qty: this.qty,
+      });
       if (!result.error) {
         store.getters.alert("已加到購物車");
         store.state.cart_items = result.items;
       } else if (result.type && result.type == "exist_error") {
-        store.getters.alert("物品已存在於購物車");
-
+        //item exists, update cart
+        let result = await store.dispatch("postData", {
+          url: store.state.api.apiUpdateCartItemsURL,
+          body: {
+            token: localStorage.getItem("token_front"),
+            items: JSON.stringify([
+              {
+                product_id: this.product.id,
+                name: this.product.name,
+                imgs: this.product.imgs,
+                qty: this.qty,
+                price: this.product.price,
+              },
+            ]),
+          },
+        });
+        if (result.error) {
+          console.log(result);
+          store.getters.errorAlert();
+          return;
+        }
+        let myCart =await store.dispatch('getCart');
+        store.state.cart_items = myCart.items;
+        store.getters.alert("已更新購物車");
+        return;
       } else {
         console.log(result);
         store.getters.errorAlert();
-        
+        return;
       }
-      
-
-      
     },
-    async showAlert(){
+    async showAlert() {
       Swal.fire({
-          title: "需要會員身分才能進行購物",
-          text: "尚未登入會員,是否需要跳轉至登入頁面?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "好的",
-          cancelButtonText: "先不用,我想再看一下",
-        }).then((result) => {
-          store.commit('removeFrontUserLocalData');
-          if (result.isConfirmed) {
-            this.$router.push({ name: "FrontLogin" });
-          }
-        });
-    }
+        title: "需要會員身分才能進行購物",
+        text: "尚未登入會員,是否需要跳轉至登入頁面?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "好的",
+        cancelButtonText: "先不用,我想再看一下",
+      }).then((result) => {
+        store.commit("removeFrontUserLocalData");
+        if (result.isConfirmed) {
+          this.$router.push({ name: "FrontLogin" });
+        }
+      });
+    },
   },
 };
 </script>
