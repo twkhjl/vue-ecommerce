@@ -26,6 +26,7 @@ const apiGetUserOrderURL=apiRootURL+process.env.VUE_APP_API_GET_USER_ORDER_URL;
 const apiPlaceOrderURL= apiRootURL + process.env.VUE_APP_API_PLACE_ORDER_URL;
 const apiCancelOrderURL= apiRootURL + process.env.VUE_APP_API_CANCEL_ORDER_URL;
 const apiCpGetAllOrdersURL = apiRootURL + process.env.VUE_APP_API_CP_GET_ALL_ORDERS_URL;
+const apiCpStastisticsOrdersAllURL = apiRootURL + process.env.VUE_APP_API_STATISTICS_ORDERS_ALL_URL;
 
 export default createStore({
   state: {
@@ -186,6 +187,7 @@ export default createStore({
       apiCancelOrderURL,
 
       apiCpGetAllOrdersURL,
+      apiCpStastisticsOrdersAllURL,
 
     },
 
@@ -449,6 +451,24 @@ export default createStore({
     async getAllOrders(context, payload) {
       let result = '';
       const url = apiCpGetAllOrdersURL;
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: localStorage.getItem("token_cp"),
+          'content-type': 'application/json'
+        }
+        
+      }).then(res => res.json()).then(res => {
+        result = Promise.resolve(res);
+      }).catch(err => {
+        result = Promise.resolve({ error: err });
+      });
+      return result;
+
+    },
+    async getStatisticsAllOrders(context, payload) {
+      let result = '';
+      const url = apiCpStastisticsOrdersAllURL;
       await fetch(url, {
         method: 'GET',
         headers: {
